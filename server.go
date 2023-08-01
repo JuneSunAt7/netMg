@@ -5,6 +5,7 @@ import (
 	"net"
 )
 
+// commit
 var dict = map[string]string{
 	"red":    "красный",
 	"green":  "зеленый",
