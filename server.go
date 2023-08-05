@@ -6,15 +6,15 @@ import (
 )
 
 // commit
+
 var dict = map[string]string{
-	"red":    "красный",
-	"green":  "зеленый",
-	"blue":   "синий",
-	"yellow": "желтый",
+	"ERROR":   "красный",
+	"GOOD":    "зеленый",
+	"WARNING": "желтый",
 }
 
 func server() {
-	listener, err := net.Listen("tcp", ":4545")
+	listener, err := net.Listen("tcp", ":729")
 
 	if err != nil {
 		fmt.Println(err)
@@ -54,9 +54,7 @@ func handleConnection(conn net.Conn) {
 		conn.Write([]byte(target))
 	}
 }
-func db() {
-	//
-}
+
 func main() {
 	server()
 }
