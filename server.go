@@ -1,60 +1,70 @@
 package main
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
-	"net"
+	"io"
 )
 
-// commit
+func main() {
+	key := []byte("0123456789abcdef0123456789abcdef") // 256-bit (32 byte) AES ключ
+	plaintext := []byte("texttexttexttext")           // исходный текст для шифрования
 
-var dict = map[string]string{
-	"ERROR":   "красный",
-	"GOOD":    "зеленый",
-	"WARNING": "желтый",
-}
-
-func server() {
-	listener, err := net.Listen("tcp", ":729")
-
+	// Шифрование
+	ciphertext, err := encrypt(key, plaintext)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Ошибка шифрования:", err)
 		return
 	}
-	defer listener.Close()
-	fmt.Println("Server is listening...")
-	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			fmt.Println(err)
-			conn.Close()
-			continue
-		}
-		go handleConnection(conn) // запускаем горутину для обработки запроса
+
+	fmt.Printf("Зашифрованный текст в шестнадцатеричном формате: %s\n", hex.EncodeToString(ciphertext))
+
+	// Дешифрование
+	decryptedText, err := decrypt(key, ciphertext)
+	if err != nil {
+		fmt.Println("Ошибка дешифрования:", err)
+		return
 	}
-}
-func handleConnection(conn net.Conn) {
-	defer conn.Close()
-	for {
-		// считываем полученные в запросе данные
-		input := make([]byte, (1024 * 4))
-		n, err := conn.Read(input)
-		if n == 0 || err != nil {
-			fmt.Println("Read error:", err)
-			break
-		}
-		source := string(input[0:n])
-		// на основании полученных данных получаем из словаря перевод
-		target, ok := dict[source]
-		if ok == false { // если данные не найдены в словаре
-			target = "undefined"
-		}
-		// выводим на консоль сервера диагностическую информацию
-		fmt.Println(source, "-", target)
-		// отправляем данные клиенту
-		conn.Write([]byte(target))
-	}
+
+	fmt.Println("Расшифрованный текст:", string(decryptedText))
 }
 
-func main() {
-	server()
+func encrypt(key, plaintext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+
+	mode := cipher.NewCBCEncrypter(block, iv)
+	mode.CryptBlocks(ciphertext[aes.BlockSize:], plaintext)
+
+	return ciphertext, nil
+}
+
+func decrypt(key, ciphertext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ciphertext) < aes.BlockSize {
+		return nil, fmt.Errorf("зашифрованный текст слишком короткий")
+	}
+
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
+
+	mode := cipher.NewCBCDecrypter(block, iv)
+	mode.CryptBlocks(ciphertext, ciphertext)
+
+	return ciphertext, nil
 }
