@@ -1,70 +1,30 @@
 package main
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
-	"encoding/hex"
 	"fmt"
-	"io"
+	"log"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
 )
 
 func main() {
-	key := []byte("0123456789abcdef0123456789abcdef") // 256-bit (32 byte) AES ключ
-	plaintext := []byte("texttexttexttext")           // исходный текст для шифрования
+	// Установите адрес прокси-сервера
+	proxyURL, _ := url.Parse("http://368.188.59.198")
 
-	// Шифрование
-	ciphertext, err := encrypt(key, plaintext)
-	if err != nil {
-		fmt.Println("Ошибка шифрования:", err)
-		return
+	// Создайте делегата Transport для перенаправления запросов через прокси-сервер
+	transport := &http.Transport{Proxy: http.ProxyURL(proxyURL)}
+
+	// Создайте обработчик, который будет перенаправлять все запросы через прокси-сервер
+	proxy := &httputil.ReverseProxy{Director: func(req *http.Request) {
+		req.URL.Scheme = proxyURL.Scheme
+		req.URL.Host = proxyURL.Host
+		req.URL.Path = "/" + req.URL.Path
+		fmt.Println("shared query...", req.Header)
+	},
+		Transport: transport,
 	}
 
-	fmt.Printf("Зашифрованный текст в шестнадцатеричном формате: %s\n", hex.EncodeToString(ciphertext))
-
-	// Дешифрование
-	decryptedText, err := decrypt(key, ciphertext)
-	if err != nil {
-		fmt.Println("Ошибка дешифрования:", err)
-		return
-	}
-
-	fmt.Println("Расшифрованный текст:", string(decryptedText))
-}
-
-func encrypt(key, plaintext []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
-	iv := ciphertext[:aes.BlockSize]
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
-	}
-
-	mode := cipher.NewCBCEncrypter(block, iv)
-	mode.CryptBlocks(ciphertext[aes.BlockSize:], plaintext)
-
-	return ciphertext, nil
-}
-
-func decrypt(key, ciphertext []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(ciphertext) < aes.BlockSize {
-		return nil, fmt.Errorf("зашифрованный текст слишком короткий")
-	}
-
-	iv := ciphertext[:aes.BlockSize]
-	ciphertext = ciphertext[aes.BlockSize:]
-
-	mode := cipher.NewCBCDecrypter(block, iv)
-	mode.CryptBlocks(ciphertext, ciphertext)
-
-	return ciphertext, nil
+	// Запустите сервер на порту 8080 и обрабатывайте все запросы с помощью прокси-сервера
+	log.Fatal(http.ListenAndServe(":80", proxy))
 }
