@@ -8,9 +8,12 @@ import (
 	"net/url"
 )
 
+func hello() {
+
+}
 func main() {
 	// Установите адрес прокси-сервера
-	proxyURL, _ := url.Parse("http://13.214.197.241")
+	proxyURL, _ := url.Parse("http://example.com")
 
 	// Создайте делегата Transport для перенаправления запросов через прокси-сервер
 	transport := &http.Transport{Proxy: http.ProxyURL(proxyURL)}

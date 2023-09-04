@@ -1,0 +1,93 @@
+
+html {
+    background: #d6eaf8;
+    color: #0073ff70;
+    text-decoration: none;
+  }
+
+.btn-group button {
+    text-decoration: none;
+    margin-top: 20px;
+  display: block;
+  color: rgb(0, 0, 0);
+  padding: 20px 30px;
+  
+  border-radius: 10px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  width: 150px;
+  background-image: linear-gradient(to right, #d6eaf8 0%, #4830F0 51%, #9EEFE1 100%);
+  background-size: 200% auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+  transition: .5s;
+    border: none;
+    outline: none;
+  
+
+}
+
+.btn-group button:not(:last-child) {
+    border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+    background-position: right center;
+}
+.user button{
+    text-decoration: none;
+    margin-top: 20px;
+    margin-right: 20px;
+    float:right;
+    z-index:0;
+    display:block;
+  color: rgb(0, 0, 0);
+  padding: 20px 30px;
+  border-radius: 10px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  width: 70px;
+  background-image: linear-gradient(to right, #9ebaef 0%, #8a30f0 51%,  #d6daf8 100%);
+  background-size: 200% auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+  transition: .5s;
+    border: none;
+    outline: none;
+}
+
+.user button:hover {
+    background-position: right center;
+}
+.footer {
+    position: fixed; /* Фиксированное положение */
+    left: 0; bottom: 0; /* Левый нижний угол */
+    padding: 10px; /* Поля вокруг текста */
+    background: #6d80fb; /* Цвет фона */
+    color: #fff; /* Цвет текста */
+    width: 100%; /* Ширина слоя */
+}
+
+input{
+  display: none;
+}
+.reader{
+  text-decoration: none;
+  margin-top: 20px;
+display: block;
+color: rgb(0, 0, 0);
+padding: 20px 30px;
+
+border-radius: 10px;
+font-family: 'Arial', sans-serif;
+font-weight: bold;
+text-transform: uppercase;
+width: 150px;
+background-image: linear-gradient(to right, #d6eaf8 0%, #4830F0 51%, #9EEFE1 100%);
+background-size: 200% auto;
+box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+transition: .5s;
+  border: none;
+  outline: none;
+}
