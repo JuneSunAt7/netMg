@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// Установите адрес прокси-сервера
-	proxyURL, _ := url.Parse("http://368.188.59.198")
+	proxyURL, _ := url.Parse("http://13.214.197.241")
 
 	// Создайте делегата Transport для перенаправления запросов через прокси-сервер
 	transport := &http.Transport{Proxy: http.ProxyURL(proxyURL)}
@@ -26,5 +26,5 @@ func main() {
 	}
 
 	// Запустите сервер на порту 8080 и обрабатывайте все запросы с помощью прокси-сервера
-	log.Fatal(http.ListenAndServe(":80", proxy))
+	log.Fatal(http.ListenAndServe(":8080", proxy))
 }
