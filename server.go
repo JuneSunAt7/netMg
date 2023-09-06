@@ -8,9 +8,6 @@ import (
 	"net/url"
 )
 
-func hello() {
-
-}
 func main() {
 	// Установите адрес прокси-сервера
 	proxyURL, _ := url.Parse("http://example.com")

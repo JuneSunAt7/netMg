@@ -1,9 +1,12 @@
 
-html {
-    background: #d6eaf8;
-    color: #0073ff70;
-    text-decoration: none;
-  }
+
+    body {
+
+background: linear-gradient(rgb(210, 210, 255), rgb(142, 215, 255)) fixed;
+
+
+}
+
 
 .btn-group button {
     text-decoration: none;
@@ -90,4 +93,10 @@ box-shadow: 0 0 20px rgba(0, 0, 0, .1);
 transition: .5s;
   border: none;
   outline: none;
+}
+a{
+  color: #001954;
+  text-align:center;
+  display: block;
+text-align-last: center;
 }
