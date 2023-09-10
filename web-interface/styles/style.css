@@ -20,7 +20,7 @@ background: linear-gradient(rgb(210, 210, 255), rgb(142, 215, 255)) fixed;
   font-weight: bold;
   text-transform: uppercase;
   width: 150px;
-  background-image: linear-gradient(to right, #d6eaf8 0%, #4830F0 51%, #9EEFE1 100%);
+  background-image: linear-gradient(to right, rgb(210, 210, 255) 0%, #4830F0 51%, #9EEFE1 100%);
   background-size: 200% auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, .1);
   transition: .5s;
@@ -70,6 +70,7 @@ background: linear-gradient(rgb(210, 210, 255), rgb(142, 215, 255)) fixed;
     background: #6d80fb; /* Цвет фона */
     color: #fff; /* Цвет текста */
     width: 100%; /* Ширина слоя */
+    text-align: center;
 }
 
 input{
@@ -94,7 +95,7 @@ transition: .5s;
   border: none;
   outline: none;
 }
-a{
+body#a{
   color: #001954;
   text-align:center;
   display: block;

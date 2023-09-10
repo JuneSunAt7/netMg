@@ -2,29 +2,33 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"net/http/httputil"
-	"net/url"
+	"net"
 )
 
 func main() {
-	// Установите адрес прокси-сервера
-	proxyURL, _ := url.Parse("http://example.com")
 
-	// Создайте делегата Transport для перенаправления запросов через прокси-сервер
-	transport := &http.Transport{Proxy: http.ProxyURL(proxyURL)}
-
-	// Создайте обработчик, который будет перенаправлять все запросы через прокси-сервер
-	proxy := &httputil.ReverseProxy{Director: func(req *http.Request) {
-		req.URL.Scheme = proxyURL.Scheme
-		req.URL.Host = proxyURL.Host
-		req.URL.Path = "/" + req.URL.Path
-		fmt.Println("shared query...", req.Header)
-	},
-		Transport: transport,
+	conn, err := net.Dial("tcp", "127.0.0.1:4545")
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
+	defer conn.Close()
+	for {
+		var source = "1234"
 
-	// Запустите сервер на порту 8080 и обрабатывайте все запросы с помощью прокси-сервера
-	log.Fatal(http.ListenAndServe(":8080", proxy))
+		// отправляем сообщение серверу
+		if n, err := conn.Write([]byte(source)); n == 0 || err != nil {
+			fmt.Println(err)
+			return
+		}
+		// получем ответ
+		fmt.Print("Handshake hash:")
+		buff := make([]byte, 1024)
+		n, err := conn.Read(buff)
+		if err != nil {
+			break
+		}
+		fmt.Print(string(buff[0:n]))
+		fmt.Println()
+	}
 }

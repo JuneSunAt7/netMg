@@ -1,9 +1,17 @@
 
   function callback() {
-    var str = '{"artist":"So and So","title":"Not Relevant"}';
-    var jsonObj = JSON.parse(str);
 
-    $("#d").append('<a onclick="console.log(JSON.stringify(jsonObj))" >Link</a>');
+    let file = "tree.json";;
 
+    let reader = new FileReader();
+  
+    reader.readAsText(file);
+  
+    reader.onload = function() {
+      console.log(reader.result);
+    };
+  
+    reader.onerror = function() {
+      console.log(reader.error);
+    };
   };
-
