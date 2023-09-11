@@ -2,7 +2,7 @@
 
     body {
 
-background: linear-gradient(rgb(210, 210, 255), rgb(142, 215, 255)) fixed;
+background: rgb(173, 219, 255)
 
 
 }
@@ -20,7 +20,7 @@ background: linear-gradient(rgb(210, 210, 255), rgb(142, 215, 255)) fixed;
   font-weight: bold;
   text-transform: uppercase;
   width: 150px;
-  background-image: linear-gradient(to right, rgb(210, 210, 255) 0%, #4830F0 51%, #9EEFE1 100%);
+  background-image: linear-gradient(to right, rgb(173, 219, 255) 0%, #4830F0 51%, rgb(173, 219, 255)100%);
   background-size: 200% auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, .1);
   transition: .5s;
@@ -52,7 +52,7 @@ background: linear-gradient(rgb(210, 210, 255), rgb(142, 215, 255)) fixed;
   font-weight: bold;
   text-transform: uppercase;
   width: 70px;
-  background-image: linear-gradient(to right, #9ebaef 0%, #8a30f0 51%,  #d6daf8 100%);
+  background-image: linear-gradient(to right, rgb(173, 219, 255) 0%, #8a30f0 51%,  rgb(173, 219, 255) 100%);
   background-size: 200% auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, .1);
   transition: .5s;
