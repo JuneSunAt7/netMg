@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
+	"mgmt/mgmt"
 	"net"
 	"os/user"
 )
@@ -61,6 +62,7 @@ func geths() {
 	}
 }
 func main() {
+	fmt.Printf(mgmt.Test("mystr"))
 	geths()
 
 }
