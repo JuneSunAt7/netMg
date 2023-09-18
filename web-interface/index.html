@@ -12,24 +12,52 @@
 </head>
 
 <body>
+    
+<header>
+    <div class="btn-group">
+
+        <button id="readFolders" onclick="callback()"> Data</button>
+        <button>Keys</button>
+        <button>Configure</button>
+        <button>Analyze</button>
+        <button>Dashboard</button>
+    
+    
+    </div>
+</header>
+
 
     <div class="user">
         <button>ID</button>
     </div>
 
-  
+    <div class="canvas">  
+        <div class="legend">
+          <p class="title">Dashboard</p>    
+          <ul class="caption-list">
+            <li class="caption-item">txt-files</li>
+            <li class="caption-item">images</li>
+            <li class="caption-item">videos</li>
+            <li class="caption-item">app-data</li>
+            <li class="caption-item">music</li>
+            <li class="caption-item">code</li>
+            <li class="caption-item">others</li>
+          </ul>
+        </div>
+        
+        <svg class="chart" width="500" height="500" viewBox="0 0 50 50">
+          <circle class="unit" r="15.9" cx="50%" cy="50%"></circle>
+          <circle class="unit" r="15.9" cx="50%" cy="50%"></circle>
+          <circle class="unit" r="15.9" cx="50%" cy="50%"></circle>
+          <circle class="unit" r="15.9" cx="50%" cy="50%"></circle>
+          <circle class="unit" r="15.9" cx="50%" cy="50%"></circle>
+          <circle class="unit" r="15.9" cx="50%" cy="50%"></circle>
+          <circle class="unit" r="15.9" cx="50%" cy="50%"></circle>
+        </svg>
+      </div>
 
 
-<div class="btn-group">
 
-    <button id="readFolders" onclick="callback()"> Folders</button>
-    <button>Keys</button>
-    <button>Settings</button>
-    <button>Analyze</button>
-    <button>Custom</button>
-
-
-</div>
 <a id="a">
 
 </a>  
