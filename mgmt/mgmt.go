@@ -16,12 +16,16 @@ var GetDict = map[int]string{
 	2: "GETSTAT",
 	3: "GETFILE",
 	4: "GETERROR",
+	5: "GETSEC",
+	6: "GET2FA",
 }
 
 var PostDict = map[int]string{
 	11: "POSTINFO",
 	22: "POSTDATA",
 	33: "COMMENT",
+	44: "POST2FA",
+	55: "CONFIG",
 }
 var UserFun = map[string]int{
 	"getinfo":     1,
