@@ -1,7 +1,4 @@
-package mgmt
-
-// A simple program demonstrating the text input component from the Bubbles
-// component library.
+package style
 
 import (
 	"fmt"

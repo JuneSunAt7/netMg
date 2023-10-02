@@ -1,10 +1,10 @@
 package main
 
 import (
-	"mgmt/mgmt"
+	"mgmt/style"
 )
 
 func main() {
-	mgmt.InputText()
+	style.InputText()
 
 }
