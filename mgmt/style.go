@@ -2,9 +2,11 @@ package mgmt
 
 import (
 	"fmt"
+
 	"os"
 
 	"github.com/charmbracelet/bubbles/list"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -47,11 +49,12 @@ func (m model) View() string {
 	return docStyle.Render(m.list.View())
 }
 
-func Style() {
+func Settings() {
 	items := []list.Item{
 		item{title: "Установить сертификат", desc: "Укажите полный путь к сертификату"},
 		item{title: "Сконфигурировать с хранилищем", desc: "Необходим сертификат и токен"},
 		item{title: "Статистика накопителей", desc: "Сколько занимают места разные типы"},
+		item{title: "Статистика использования", desc: "Полная статистика приложения"},
 		item{title: "Проверка безопасности хранилища", desc: "Узнайте уровень защиты"},
 		item{title: "Авторезервирование", desc: "Настройте частоту резервирования"},
 		item{title: "Установить или обновить 2FA", desc: "Установка/обновление биометрии для доступа к данным"},

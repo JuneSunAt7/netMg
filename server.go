@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	mgmt.Style()
+	mgmt.InputText()
 
 }

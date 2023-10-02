@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func CreateCert(str string) {
+func createCert(str string) {
 	file, err := os.Create("cert.rd")
 	if err != nil {
 		os.Exit(1)
@@ -26,6 +26,9 @@ func RandStringRunes(n int) {
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
-	CreateCert(string(b))
+	createCert(string(b))
+
+}
+func genToken() {
 
 }
