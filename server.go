@@ -4,7 +4,10 @@ import (
 	"mgmt/style"
 )
 
+func Startup() {
+	style.Settings()
+}
 func main() {
-	style.InputText()
+	Startup()
 
 }
