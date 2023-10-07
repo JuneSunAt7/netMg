@@ -9,9 +9,6 @@ import (
 
 const lenRunes = 40
 
-func LogHashChains() {
-
-}
 func createCert(str string) {
 	file, err := os.Create("cert.rd")
 	if err != nil {
@@ -20,6 +17,37 @@ func createCert(str string) {
 	file.WriteString(str)
 	defer file.Close()
 
+}
+
+func LogHashChains() {
+	if secureHash == "" {
+		return
+	}
+	file, err := os.Create("hash_chains.rd")
+	if err != nil {
+		os.Exit(1)
+	}
+	data := secureHash + " " + time.Now().Format(time.DateTime) + "\n"
+	file.WriteString(data)
+	defer file.Close()
+
+}
+func ChainsUpdate() {
+	if _, err := os.Stat("hash_chains.rd"); err != nil {
+		if os.IsNotExist(err) {
+			RandStringRunes()
+		} else {
+			upd, err := os.OpenFile("hash_chains.rd", os.O_APPEND|os.O_WRONLY, 0600)
+			if err != nil {
+				panic(err)
+			}
+			defer upd.Close()
+
+			if _, err = upd.WriteString(secureHash + " " + time.Now().Format(time.DateTime) + "\n"); err != nil {
+				panic(err)
+			}
+		}
+	}
 }
 func init() {
 	rand.Seed(time.Now().UnixNano())
@@ -46,7 +74,7 @@ func genToken() string {
 
 }
 
-func UpdateCert(filename string) { //Update cert file
+func UpdateCert(filename string) { // Full path of certificate
 	if _, err := os.Stat(filename); err != nil {
 		if os.IsNotExist(err) {
 			RandStringRunes()

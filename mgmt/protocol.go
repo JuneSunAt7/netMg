@@ -49,25 +49,23 @@ func Handshake(address string) {
 		return
 	}
 	defer conn.Close()
-	for {
-		var source = sha1_hash
+	var source = sha1_hash
 
-		// отправляем название компьютера в виде хеша
-		if n, err := conn.Write([]byte(source)); n == 0 || err != nil {
+	// отправляем название компьютера в виде хеша
+	if n, err := conn.Write([]byte(source)); n == 0 || err != nil {
 
-			fmt.Println(err)
-			return
-		}
-		// получем ответ
-		buff := make([]byte, 1024)
-		n, err := conn.Read(buff)
-		if err != nil {
-			break
-		}
-		secureHash = string(buff[0:n])
-
-		fmt.Printf("Succesful connect...\n")
+		fmt.Println(err)
+		return
 	}
+	// получем ответ
+	buff := make([]byte, 1024)
+	n, err := conn.Read(buff)
+	if err != nil {
+		panic(err)
+	}
+	secureHash = string(buff[0:n])
+
+	fmt.Printf("Succesful connect...\n")
 
 }
 func Getusr() string {
