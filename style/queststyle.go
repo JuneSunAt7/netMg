@@ -2,73 +2,85 @@ package style
 
 import (
 	"fmt"
-	"log"
+	"os"
 
-	"github.com/charmbracelet/bubbles/textinput"
+	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
-func InputText() {
-	p := tea.NewProgram(initialModel())
-	if _, err := p.Run(); err != nil {
-		log.Fatal(err)
-	}
+var baseStyle = lipgloss.NewStyle().
+	BorderStyle(lipgloss.NormalBorder()).
+	BorderForeground(lipgloss.Color("240"))
+
+type model struct {
+	table table.Model
 }
 
-type (
-	errMsg error
-)
+func (m model) Init() tea.Cmd { return nil }
 
-type modelInput struct {
-	textInput textinput.Model
-	err       error
-}
-
-func initialModel() modelInput {
-	ti := textinput.New()
-	ti.Placeholder = "Настройки"
-	ti.Focus()
-	ti.CharLimit = 156
-	ti.Width = 20
-
-	return modelInput{
-		textInput: ti,
-		err:       nil,
-	}
-}
-
-func (m modelInput) Init() tea.Cmd {
-	return textinput.Blink
-}
-
-func (m modelInput) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
-
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.Type {
-		case tea.KeyCtrlC, tea.KeyEsc:
+		switch msg.String() {
+		case "esc":
+			if m.table.Focused() {
+				m.table.Blur()
+			} else {
+				m.table.Focus()
+			}
+		case "q", "ctrl+c":
 			return m, tea.Quit
-
-		case tea.KeyEnter:
-
-			Settings()
+		case "enter":
+			return m, tea.Batch(
+				tea.Printf("Let's go to %s!", m.table.SelectedRow()[1]),
+			)
 		}
-
-	// We handle errors just like any other message
-	case errMsg:
-		m.err = msg
-		return m, nil
 	}
-
-	m.textInput, cmd = m.textInput.Update(msg)
+	m.table, cmd = m.table.Update(msg)
 	return m, cmd
 }
 
-func (m modelInput) View() string {
-	return fmt.Sprintf(
-		"Введите ваш запрос\n\n%s\n\n%s",
-		m.textInput.View(),
-		"Нажмите Esc для выхода",
-	) + "\n"
+func (m model) View() string {
+	return baseStyle.Render(m.table.View()) + "\n"
+}
+
+func CreateTable() {
+	columns := []table.Column{
+		{Title: "№", Width: 8},
+		{Title: "Команда", Width: 10},
+		{Title: "Описание", Width: 60},
+	}
+
+	rows := []table.Row{
+		{"1", "Tokyo", "Japan"},
+		{"2", "Delhi", "India"},
+	}
+
+	t := table.New(
+		table.WithColumns(columns),
+		table.WithRows(rows),
+		table.WithFocused(true),
+		table.WithHeight(9),
+		table.WithWidth(60),
+	)
+
+	s := table.DefaultStyles()
+	s.Header = s.Header.
+		BorderStyle(lipgloss.NormalBorder()).
+		BorderForeground(lipgloss.Color("240")).
+		BorderBottom(true).
+		Bold(false)
+	s.Selected = s.Selected.
+		Foreground(lipgloss.Color("229")).
+		Background(lipgloss.Color("57")).
+		Bold(false)
+	t.SetStyles(s)
+
+	m := model{t}
+	if _, err := tea.NewProgram(m).Run(); err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
+	}
 }

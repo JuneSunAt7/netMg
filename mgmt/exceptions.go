@@ -1,11 +1,11 @@
 package mgmt
 
-func NoCode() {
+func NoCode(err error) {
 
 }
-func NoData() {
+func NoData(err error) {
 
 }
-func NoConnect() {
+func NoConnect(err error) {
 
 }

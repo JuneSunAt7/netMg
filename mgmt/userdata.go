@@ -66,12 +66,19 @@ func compress(source string, target string) error {
 
 	return err
 }
+
 func CreateContainer(path string) {
 	contName := time.Now().Format(time.DateTime) + ".zip"
 	err := compress(path, contName)
 	if err != nil {
-		fmt.Println("Ошибка сжатия:", err)
+		fmt.Println("Ошибка контейнеризации:", err)
 	} else {
-		fmt.Println("Сжатие выполнено успешно!")
+		fmt.Println("Контейнер создан")
 	}
+}
+
+func CheckSumData() uint64 {
+	var sum uint64
+
+	return sum
 }
