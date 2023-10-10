@@ -11,7 +11,8 @@ import (
 
 var baseStyle = lipgloss.NewStyle().
 	BorderStyle(lipgloss.RoundedBorder()).
-	BorderForeground(lipgloss.Color("240"))
+	BorderForeground(lipgloss.Color("#a200ff")).
+	Faint(true).Align(lipgloss.Center)
 
 type model struct {
 	table table.Model
@@ -34,6 +35,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			if m.table.SelectedRow()[0] == "1" {
+
 				CreateCertTable()
 			}
 

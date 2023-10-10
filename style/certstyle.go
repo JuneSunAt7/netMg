@@ -16,17 +16,17 @@ func cerertTable() {
 	}
 
 	rows := []table.Row{
-		{"1", "Генерация сертификата"},
-		{"2", "Генерация токена"},
-		{"3", "Указать сертификат"},
-		{"4", "Назад"},
+		{"1.1", "Генерация сертификата"},
+		{"1.2", "Генерация токена"},
+		{"1.3", "Указать сертификат"},
+		{"1.4", "Назад"},
 	}
 
 	t := table.New(
 		table.WithColumns(columns),
 		table.WithRows(rows),
 		table.WithFocused(true),
-		table.WithHeight(3),
+		table.WithHeight(4),
 	)
 
 	s := table.DefaultStyles()
