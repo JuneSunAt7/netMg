@@ -10,7 +10,7 @@ import (
 )
 
 var baseStyle = lipgloss.NewStyle().
-	BorderStyle(lipgloss.NormalBorder()).
+	BorderStyle(lipgloss.RoundedBorder()).
 	BorderForeground(lipgloss.Color("240"))
 
 type model struct {
@@ -33,9 +33,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "enter":
-			return m, tea.Batch(
-				tea.Printf("Let's go to %s!", m.table.SelectedRow()[1]),
-			)
+			if m.table.SelectedRow()[0] == "1" {
+				CreateCertTable()
+			}
+
 		}
 	}
 	m.table, cmd = m.table.Update(msg)
@@ -49,26 +50,30 @@ func (m model) View() string {
 func CreateTable() {
 	columns := []table.Column{
 		{Title: "№", Width: 8},
-		{Title: "Команда", Width: 10},
-		{Title: "Описание", Width: 60},
+		{Title: "Команда", Width: 20},
+		{Title: "Описание", Width: 40},
 	}
 
 	rows := []table.Row{
-		{"1", "Tokyo", "Japan"},
-		{"2", "Delhi", "India"},
+		{"1", "Сертификаты", "Безопасность и программная защита"},
+		{"2", "2FA", "Управление паролями и RDevice"},
+		{"3", "Конфигурация", "Настройка конфигурации"},
+		{"4", "Авторезервирование", "Частота резервирования"},
+		{"5", "Статистика", "Статистика накопителей"},
+		{"6", "Данные", "Упаковка данных"},
+		{"7", "Помощь", "Устранение типичных проблем"},
 	}
 
 	t := table.New(
 		table.WithColumns(columns),
 		table.WithRows(rows),
 		table.WithFocused(true),
-		table.WithHeight(9),
-		table.WithWidth(60),
+		table.WithHeight(7),
 	)
 
 	s := table.DefaultStyles()
 	s.Header = s.Header.
-		BorderStyle(lipgloss.NormalBorder()).
+		BorderStyle(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("240")).
 		BorderBottom(true).
 		Bold(false)
@@ -80,7 +85,7 @@ func CreateTable() {
 
 	m := model{t}
 	if _, err := tea.NewProgram(m).Run(); err != nil {
-		fmt.Println("Error running program:", err)
+		fmt.Println("Ошибка запуска ", err)
 		os.Exit(1)
 	}
 }
