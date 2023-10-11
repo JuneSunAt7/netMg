@@ -34,9 +34,19 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "enter":
-			if m.table.SelectedRow()[0] == "1" {
-
+			for i := 0; i < 150; i++ {
+				tea.Printf("                                                                                                             ")
+			}
+			switch m.table.SelectedRow()[0] {
+			case "1":
 				CreateCertTable()
+			case "2":
+				CreateTwoFATable()
+
+			case "3":
+				CreateConfigTable()
+			case "4":
+				CreateAutoResTable()
 			}
 
 		}

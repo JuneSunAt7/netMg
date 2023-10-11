@@ -9,7 +9,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-func twoFATable() {
+func autoreservTable() {
 
 	columns := []table.Column{
 		{Title: "№", Width: 8},
@@ -17,17 +17,16 @@ func twoFATable() {
 	}
 
 	rows := []table.Row{
-		{"2.1", "Пароли"},
-		{"2.2", "TOTP-ключи"},
-		{"2.3", "RDevice"},
-		{"2.4", "Назад"},
+		{"4.1", "Частота резервирования"},
+		{"4.2", "Резервиремые данные"},
+		{"4.3", "Назад"},
 	}
 
 	t := table.New(
 		table.WithColumns(columns),
 		table.WithRows(rows),
 		table.WithFocused(true),
-		table.WithHeight(4),
+		table.WithHeight(3),
 	)
 
 	s := table.DefaultStyles()
@@ -49,6 +48,6 @@ func twoFATable() {
 	}
 
 }
-func CreateTwoFATable() {
-	twoFATable()
+func CreateAutoResTable() {
+	autoreservTable()
 }

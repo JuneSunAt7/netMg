@@ -10,6 +10,7 @@ import (
 )
 
 func cerertTable() {
+
 	columns := []table.Column{
 		{Title: "№", Width: 8},
 		{Title: "Команда", Width: 30},
@@ -46,6 +47,7 @@ func cerertTable() {
 		fmt.Println("Ошибка запуска ", err)
 		os.Exit(1)
 	}
+
 }
 func CreateCertTable() {
 	cerertTable()
