@@ -34,7 +34,6 @@ var UserFun = map[string]int{
 	"postdata":    22,
 	"add comment": 33,
 }
-
 var secureHash string
 
 func Handshake(address string) {
@@ -50,10 +49,8 @@ func Handshake(address string) {
 	}
 	defer conn.Close()
 	var source = sha1_hash
-
 	// отправляем название компьютера в виде хеша
 	if n, err := conn.Write([]byte(source)); n == 0 || err != nil {
-
 		fmt.Println(err)
 		return
 	}
@@ -84,7 +81,7 @@ func PostCode(num int, address string) {
 		return
 	}
 	defer conn.Close()
-	for {
+	for { // cycle for(int i =0; i < 90 second; i++)
 		// Send post-data in server
 		if n, err := conn.Write([]byte(parseCode)); n == 0 || err != nil {
 			fmt.Println(err)
@@ -98,14 +95,14 @@ func GetCode(address string) uint64 {
 	conn, err := net.Dial("tcp", address)
 	if err != nil {
 		fmt.Println(err)
-		return 22 // code-signal about error
+		return 67 // code-signal about error
 	}
 	defer conn.Close()
 	// получем ответ
 	buff := make([]byte, 1024)
 	n, err := conn.Read(buff)
 	if err != nil {
-		return 22
+		return 67
 	}
 	data := binary.BigEndian.Uint64(buff[0:n])
 	return data

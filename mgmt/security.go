@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// managment certificate and tokens
 const lenRunes = 40
 
 func createCert(str string) {
@@ -89,5 +90,13 @@ func UpdateCert(filename string) { // Full path of certificate
 				panic(err)
 			}
 		}
+	}
+}
+
+// end mgmt certificate
+
+func AesConnect(address string, time uint) {
+	for i := 0; i < int(time); i++ {
+
 	}
 }
