@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"net"
 
+	"style"
+
 	client "github.com/EwRvp7LV7/45586694crypto/1client"
+	"github.com/EwRvp7LV7/45586694crypto/style"
 )
 
 const (
@@ -57,7 +60,7 @@ func run() (err error) {
 func main() {
 
 	// flag.Parse()
-
+	go style.MainWindow()
 	if err := run(); err != nil {
 		fmt.Print(err)
 	}
