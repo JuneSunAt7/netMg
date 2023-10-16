@@ -50,7 +50,7 @@ func (m model) View() string {
 func MainWindow() {
 	columns := []table.Column{
 		{Title: "#", Width: 4},
-		{Title: "Название", Width: 10},
+		{Title: "Команда", Width: 10},
 		{Title: "Описание", Width: 30},
 	}
 
@@ -58,13 +58,14 @@ func MainWindow() {
 		{"#1", "Скачать", "Скачивание файла с хранилища"},
 		{"#2", "Загрузить", "Загрузка в хранилище"},
 		{"#3", "Аутефикация", "Пароли и 2FA"},
+		{"#4", "Список", "Список файлов на сервере"},
 	}
 
 	t := table.New(
 		table.WithColumns(columns),
 		table.WithRows(rows),
 		table.WithFocused(true),
-		table.WithHeight(7),
+		table.WithHeight(4),
 	)
 
 	s := table.DefaultStyles()
@@ -75,7 +76,7 @@ func MainWindow() {
 		Bold(false)
 	s.Selected = s.Selected.
 		Foreground(lipgloss.Color("229")).
-		Background(lipgloss.Color("57")).
+		Background(lipgloss.Color("#4103fc")).
 		Bold(false)
 	t.SetStyles(s)
 
