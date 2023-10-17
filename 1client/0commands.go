@@ -11,12 +11,21 @@ import (
 
 var ROOT = "filestore/clientDir"
 
-//dynamic root dir
+// dynamic root dir
 func init() {
 	ROOT, _ = filepath.Abs("filestore/clientDir")
 }
+func Download(conn net.Conn) {
 
-//HandleClient помощник
+}
+func Upload(conn net.Conn) {
+
+}
+func ListFile(conn net.Conn) {
+
+}
+
+// HandleClient помощник
 func HandleClient(conn net.Conn) {
 	stdreader := bufio.NewReader(os.Stdin)
 

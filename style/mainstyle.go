@@ -33,8 +33,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "enter":
-			if m.table.SelectedRow()[0] == "#1" {
-				tea.ClearScreen()
+			switch m.table.SelectedRow()[0] {
+			case "#1":
+
 			}
 
 		}
@@ -50,7 +51,7 @@ func (m model) View() string {
 func MainWindow() {
 	columns := []table.Column{
 		{Title: "#", Width: 4},
-		{Title: "Команда", Width: 10},
+		{Title: "Команда", Width: 15},
 		{Title: "Описание", Width: 30},
 	}
 
