@@ -15,15 +15,6 @@ var ROOT = "filestore/clientDir"
 func init() {
 	ROOT, _ = filepath.Abs("filestore/clientDir")
 }
-func Download(conn net.Conn) {
-
-}
-func Upload(conn net.Conn) {
-
-}
-func ListFile(conn net.Conn) {
-
-}
 
 // HandleClient помощник
 func HandleClient(conn net.Conn) {
@@ -33,7 +24,6 @@ func HandleClient(conn net.Conn) {
 		fmt.Printf("ftp> ")
 		cmd, _ := stdreader.ReadString('\n')
 		cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
-
 		switch strings.ToLower(cmdArr[0]) {
 
 		case "upload":
