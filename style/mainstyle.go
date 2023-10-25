@@ -34,7 +34,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			switch m.table.SelectedRow()[0] {
+
 			case "#1":
+
+			case "#2":
+
+			case "#3":
+
+			case "#4":
+				
 
 			}
 

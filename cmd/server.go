@@ -15,8 +15,8 @@ const (
 	PORT = "2121"
 )
 
-//tsl
-//освоить документацию
+// tsl
+// освоить документацию
 func run() (err error) {
 
 	var lstnr net.Listener
@@ -30,11 +30,11 @@ func run() (err error) {
 			return err
 		}
 
-	logger.Println("TCP server is UP @ localhost: " + PORT)
+		logger.Println("TCP server is UP @ localhost: " + PORT)
 
 	} else {
 
-		cer, err := tls.LoadX509KeyPair("serts/server.crt", "serts/server.key")
+		cer, err := tls.LoadX509KeyPair("certs/server.crt", "certs/server.key")
 		if err != nil {
 			log.Println(err)
 			return err
@@ -47,7 +47,7 @@ func run() (err error) {
 			return err
 		}
 
-	logger.Println("TCP TLS Server is UP @ localhost: " + PORT)
+		logger.Println("TCP TLS Server is UP @ localhost: " + PORT)
 
 	}
 

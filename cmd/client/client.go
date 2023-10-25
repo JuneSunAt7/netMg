@@ -15,7 +15,7 @@ const (
 	HOST = "localhost"
 )
 
-func Run(cmd string) (err error) {
+func Run() (err error) {
 
 	var connect net.Conn
 
@@ -50,7 +50,7 @@ func Run(cmd string) (err error) {
 		return err
 	}
 
-	client.HandleClient(connect)
+	client.Exit(connect)
 
 	return nil
 }
@@ -59,7 +59,8 @@ func design() {
 }
 
 func main() {
-	design()
+
+	Run()
 	// flag.Parse()
 
 }
