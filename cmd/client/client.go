@@ -15,7 +15,7 @@ const (
 	HOST = "localhost"
 )
 
-func Run() (err error) {
+func Run(command string) (err error) {
 
 	var connect net.Conn
 
@@ -49,18 +49,23 @@ func Run() (err error) {
 	if err := client.AuthenticateClient(connect); err != nil {
 		return err
 	}
-
-	client.Exit(connect)
+	switch command {
+	case "#1":
+		client.Download(connect)
+	case "#2":
+		client.Upload(connect)
+	case "#4":
+		client.ListFiles(connect)
+	}
 
 	return nil
 }
-func design() {
+
+func Design() {
 	style.MainWindow()
 }
 
 func main() {
-
-	Run()
+	Run("#1")
 	// flag.Parse()
-
 }
