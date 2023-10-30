@@ -20,7 +20,7 @@ func AuthenticateClient(conn net.Conn) error {
 	}
 
 	fmt.Println(string(buffer[:n]))
-	fmt.Println("...Аутенфикация...")
+	fmt.Println(".....Аутенфикация.....")
 
 	fmt.Print("\x1b[94m") // F_LightYellow
 	fmt.Printf("Имя >>> ")
