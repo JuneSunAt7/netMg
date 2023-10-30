@@ -8,7 +8,6 @@ import (
 	"strconv"
 
 	"github.com/EwRvp7LV7/45586694crypto/logger"
-	"github.com/google/uuid"
 )
 
 func getFile(conn net.Conn, name1 string, fs string) {
@@ -20,7 +19,8 @@ func getFile(conn net.Conn, name1 string, fs string) {
 		return
 	}
 
-	name := uuid.New().String()
+	name := name1
+	fmt.Println(name)
 
 	outputFile, err := os.Create(ROOT + "/" + name)
 	if err != nil {
@@ -33,7 +33,7 @@ func getFile(conn net.Conn, name1 string, fs string) {
 	conn.Write([]byte("200 Start upload!"))
 
 	//Эта функция использует буфер в 32 КБ
-	io.Copy(outputFile, io.LimitReader(conn, fileSize))//TODO timeout wating
+	io.Copy(outputFile, io.LimitReader(conn, fileSize)) //TODO timeout wating
 
 	logger.Println("File " + name + " downloaded successfully")
 	// conn.Write([]byte("File Downloaded successfully", fnid))
