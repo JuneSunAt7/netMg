@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	client "github.com/EwRvp7LV7/45586694crypto/1client"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -33,24 +34,13 @@ func (m modelTable) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 		case "enter":
-			switch m.table.SelectedRow()[0] {
-
-			case "#1":
-
-			case "#2":
-
-			case "#3":
-
-			case "#4":
-
-			}
-
+			client.Run(m.table.SelectedRow()[0])
 		}
 	}
 	m.table, cmd = m.table.Update(msg)
 	return m, cmd
 }
-
+w
 func (m modelTable) View() string {
 	return tableStyle.Render(m.table.View()) + "\n"
 }
@@ -93,4 +83,7 @@ func MainWindow() {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
+}
+func main() {
+	MainWindow()
 }

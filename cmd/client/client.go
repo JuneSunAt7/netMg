@@ -9,7 +9,7 @@ import (
 	client "github.com/EwRvp7LV7/45586694crypto/1client"
 )
 
-func Run() (err error) {
+func Run(command string) (err error) {
 
 	var connect net.Conn
 
@@ -43,6 +43,14 @@ func Run() (err error) {
 	if err := client.AuthenticateClient(connect); err != nil {
 		return err
 	}
+	switch command {
+	case "#1":
+		client.Download(connect)
+	case "#2":
+		client.Upload(connect)
+	case "#4":
+		client.ListFiles(connect)
+	}
 
 	client.Upload(connect)
 
@@ -53,8 +61,3 @@ const (
 	PORT = "2121"
 	HOST = "localhost"
 )
-
-func main() {
-	// flag.Parse()
-
-}
