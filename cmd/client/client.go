@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/fatih/color"
+
 	client "github.com/EwRvp7LV7/45586694crypto/1client"
 )
 
-func Run(command string) (err error) {
+func Run() (err error) {
 
 	var connect net.Conn
 
@@ -43,21 +45,34 @@ func Run(command string) (err error) {
 	if err := client.AuthenticateClient(connect); err != nil {
 		return err
 	}
-	switch command {
-	case "#1":
-		client.Download(connect)
-	case "#2":
-		client.Upload(connect)
-	case "#4":
-		client.ListFiles(connect)
+	var operation string
+	color.Cyan("Доступные функции:")
+	color.Blue("[1]  |  Загрузить файл")
+	color.Blue("[2]  |  Скачать файл")
+	color.Blue("[3]  |  Список файлов")
+	color.Blue("[4]  |      Выход")
+
+	for {
+		fmt.Scanln(&operation)
+		switch operation {
+		case "1":
+			client.Upload(connect)
+		case "2":
+			client.Download(connect)
+		case "3":
+			client.ListFiles(connect)
+		case "4":
+			client.Exit(connect)
+		}
 	}
 
-	client.Upload(connect)
-
-	return nil
 }
 
 const (
 	PORT = "2121"
 	HOST = "localhost"
 )
+
+func main() {
+	Run()
+}

@@ -3,18 +3,15 @@ module github.com/EwRvp7LV7/45586694crypto
 go 1.17
 
 require (
-	github.com/charmbracelet/lipgloss v0.9.1
-	github.com/google/uuid v1.4.0
-)
-
-require (
 	gioui.org/cpu v0.0.0-20210817075930-8d6a761490d2 // indirect
 	gioui.org/shader v1.0.8 // indirect
 	git.wow.st/gmp/jni v0.0.0-20210610011705-34026c7e22d0 // indirect
 	github.com/charmbracelet/bubbletea v0.24.1 // indirect
 	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
+	github.com/fatih/color v1.15.0 // indirect
 	github.com/go-text/typesetting v0.0.0-20230803102845-24e03d8b5372 // indirect
 	github.com/gotk3/gotk3 v0.6.2 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
 	github.com/maxence-charriere/go-app/v9 v9.8.0 // indirect
 	github.com/muesli/ansi v0.0.0-20211018074035-2e021307bc4b // indirect
