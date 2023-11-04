@@ -18,11 +18,18 @@ func init() {
 	ROOT, _ = filepath.Abs("filestore/clientDir")
 }
 func showMainwindow() {
-	color.Cyan("Доступные функции:")
-	color.Blue("[1]  |  Загрузить файл")
-	color.Blue("[2]  |  Скачать файл")
-	color.Blue("[3]  |  Список файлов")
-	color.Blue("[4]  |      Выход")
+	color.HiBlue("           Доступные функции             ")
+	color.Magenta("______________________________________")
+	color.Blue("|   1    |  Загрузить файл           |")
+	color.Magenta("|________|___________________________|")
+	color.Blue("|   2    |  Скачать файл             |")
+	color.Magenta("|________|___________________________|")
+	color.Blue("|   3    |  Список файлов            |")
+	color.Magenta("|________|___________________________|")
+	color.Blue("|   4    |  Конфигурация сервера     |")
+	color.Magenta("|________|___________________________|")
+	color.Blue("|   5    |  Выход                    |")
+	color.Magenta("|________|___________________________|")
 }
 
 func Upload(conn net.Conn) {
