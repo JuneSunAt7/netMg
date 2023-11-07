@@ -5,4 +5,6 @@
 <p>Доступ к файлам в ЛС</p>
 <p>Конфигурирование сервера</p>
 <p>2FA</p>
+<img src="https://github.com/JuneSunAt7/netMg/assets/63651740/eb611b91-6178-4eb7-ab4d-eda5b5d9a4b2" align=center></img>
+
 
