@@ -1,16 +1,31 @@
 package main
 
 import (
+	"bufio"
 	"crypto/tls"
 	"flag"
-	"fmt"
 	"net"
+	"os"
+	"strings"
 
 	"github.com/fatih/color"
 
 	client "github.com/EwRvp7LV7/45586694crypto/1client"
 )
 
+func Configure() {
+	stdReader := bufio.NewReader(os.Stdin)
+	color.Magenta("Текущий файл конфишурации: confRD.conf\nЖелаете изменить его? \n [1 - Изменить 2 - Отмена]")
+	cmd, _ := stdReader.ReadString('\n')
+	cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
+
+	operation := strings.ToLower(cmdArr[0])
+
+	switch operation {
+	case "1":
+
+	}
+}
 func Run() (err error) {
 
 	var connect net.Conn
@@ -24,7 +39,7 @@ func Run() (err error) {
 			return err
 		}
 
-		fmt.Println("TCP server is Connected @ ", HOST, ":", PORT)
+		color.Green("TCP server is Connected @ ", HOST, ":", PORT)
 
 	} else {
 
@@ -37,7 +52,7 @@ func Run() (err error) {
 			return err
 		}
 
-		fmt.Println("TCP TLS Server is Connected @ ", HOST, ":", PORT)
+		color.Green("TCP TLS Server is Connected @ ", HOST, ":", PORT)
 	}
 
 	defer connect.Close()
@@ -45,22 +60,30 @@ func Run() (err error) {
 	if err := client.AuthenticateClient(connect); err != nil {
 		return err
 	}
-	var operation string
-	color.HiBlue("           Доступные функции             ")
-	color.Magenta("______________________________________")
+
+	color.HiCyan("           Доступные функции             ")
+	color.Blue("______________________________________")
 	color.Blue("|   1    |  Загрузить файл           |")
-	color.Magenta("|________|___________________________|")
+	color.Blue("|________|___________________________|")
 	color.Blue("|   2    |  Скачать файл             |")
-	color.Magenta("|________|___________________________|")
+	color.Blue("|________|___________________________|")
 	color.Blue("|   3    |  Список файлов            |")
-	color.Magenta("|________|___________________________|")
+	color.Blue("|________|___________________________|")
 	color.Blue("|   4    |  Конфигурация сервера     |")
-	color.Magenta("|________|___________________________|")
+	color.Blue("|________|___________________________|")
 	color.Blue("|   5    |  Выход                    |")
-	color.Magenta("|________|___________________________|")
+	color.Blue("|________|___________________________|")
 
 	for {
-		fmt.Scanln(&operation)
+		stdReader := bufio.NewReader(os.Stdin)
+
+		color.HiGreen("Номер функции >>> ")
+
+		cmd, _ := stdReader.ReadString('\n')
+		cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
+
+		operation := strings.ToLower(cmdArr[0])
+
 		switch operation {
 		case "1":
 			client.Upload(connect)
@@ -68,7 +91,7 @@ func Run() (err error) {
 			client.Download(connect)
 		case "3":
 			client.ListFiles(connect)
-		case "4":
+		case "5":
 			client.Exit(connect)
 		}
 	}
