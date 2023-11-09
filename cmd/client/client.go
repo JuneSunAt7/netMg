@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"crypto/tls"
 	"flag"
+	"io"
 	"net"
 	"os"
 	"strings"
@@ -12,6 +13,18 @@ import (
 
 	client "github.com/EwRvp7LV7/45586694crypto/1client"
 )
+
+func createConfig(ip, port string) {
+	conf, err := os.Create("confRD.conf")
+
+	if err != nil {
+		color.Red("Ошибка создания файла")
+	}
+
+	conf.Write([]byte(port + "\n" + ip))
+	defer conf.Close()
+	color.Green("Успешное создание файла")
+}
 
 func Configure() {
 	stdReader := bufio.NewReader(os.Stdin)
@@ -23,9 +36,18 @@ func Configure() {
 
 	switch operation {
 	case "1":
-		color.Blue("Укажите полный путь до файла конфигурации >>> ")
+		stdReader := bufio.NewReader(os.Stdin)
+		color.Green("IP   |    PORT ")
+
+		cmd, _ := stdReader.ReadString('\n')
+		cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
+		ip := strings.ToLower(cmdArr[0])
+
+		port := strings.ToLower(cmdArr[1])
+
+		createConfig(ip, port)
 	case "2":
-		return
+		os.Exit(0)
 	}
 }
 func Run() (err error) {
@@ -99,6 +121,29 @@ func Run() (err error) {
 			client.Exit(connect)
 		}
 	}
+
+}
+func readConfig() []string {
+	file, err := os.Open("confRD.conf")
+	var ipArray [2]string
+
+	if err != nil {
+		color.Red("Ошибка конфигурирования")
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	data := make([]byte, 64)
+
+	for {
+		n, err := file.Read(data)
+		if err == io.EOF { // если конец файла
+			break // выходим из цикла
+		}
+		color.Green(string(data[:n]))
+
+	}
+	return
 
 }
 
