@@ -23,7 +23,9 @@ func Configure() {
 
 	switch operation {
 	case "1":
-
+		color.Blue("Укажите полный путь до файла конфигурации >>> ")
+	case "2":
+		return
 	}
 }
 func Run() (err error) {
@@ -91,6 +93,8 @@ func Run() (err error) {
 			client.Download(connect)
 		case "3":
 			client.ListFiles(connect)
+		case "4":
+			Configure()
 		case "5":
 			client.Exit(connect)
 		}
