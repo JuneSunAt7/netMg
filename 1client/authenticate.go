@@ -21,9 +21,9 @@ func AuthenticateClient(conn net.Conn) error {
 	color.Green(string(buffer[:n]))
 
 	color.Green(".....Аутенфикация.....")
-	color.HiGreen("Имя >>> ")
+	color.HiGreen("Имя")
 	uname, _ := stdreader.ReadString('\n')
-	color.HiGreen("Пароль >>> ")
+	color.HiGreen("Пароль")
 	passwd, _ := stdreader.ReadString('\n')
 	conn.Write([]byte(uname))
 	conn.Write([]byte(passwd))
@@ -36,7 +36,7 @@ func AuthenticateClient(conn net.Conn) error {
 		color.Green("Выполняется вход")
 		return nil
 	} else {
-		color.Red("Неверный логин или пароль " + uname)
-		return errors.New("Неверный логин или пароль " + uname)
+		color.Red("Неверный логин или пароль ")
+		return errors.New("Неверный логин или пароль ")
 	}
 }

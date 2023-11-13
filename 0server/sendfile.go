@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/EwRvp7LV7/45586694crypto/logger"
+	"github.com/JuneSunAt7/netMg/logger"
 )
 
 func sendFile(conn net.Conn, name string) {

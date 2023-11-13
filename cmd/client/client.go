@@ -9,9 +9,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fatih/color"
+	"fmt"
 
-	client "github.com/EwRvp7LV7/45586694crypto/1client"
+	"github.com/fatih/color"
+	"github.com/pterm/pterm"
+
+	client "github.com/JuneSunAt7/netMg/1client"
 )
 
 func createConfig(ip, port string) {
@@ -28,7 +31,11 @@ func createConfig(ip, port string) {
 
 func Configure() {
 	stdReader := bufio.NewReader(os.Stdin)
-	color.Magenta("Текущий файл конфишурации: confRD.conf\nЖелаете изменить его? \n [1 - Изменить 2 - Отмена]")
+	color.Magenta("")
+	color.Magenta("")
+	color.Magenta("")
+
+	color.Magenta("Текущий файл конфишурации: confRD.conf\nЖелаете изменить его? \n[1 - Изменить 2 - Отмена]")
 	cmd, _ := stdReader.ReadString('\n')
 	cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
 
@@ -76,7 +83,7 @@ func Run() (err error) {
 			return err
 		}
 
-		color.Green("TCP TLS Server is Connected @ ", HOST, ":", PORT)
+		color.GreenString("TCP TLS Server is Connected @ ", HOST, ":", PORT)
 	}
 
 	defer connect.Close()
@@ -84,24 +91,29 @@ func Run() (err error) {
 	if err := client.AuthenticateClient(connect); err != nil {
 		return err
 	}
+	var options []string
 
-	color.HiCyan("           Доступные функции             ")
-	color.Blue("______________________________________")
-	color.Blue("|   1    |  Загрузить файл           |")
-	color.Blue("|________|___________________________|")
-	color.Blue("|   2    |  Скачать файл             |")
-	color.Blue("|________|___________________________|")
-	color.Blue("|   3    |  Список файлов            |")
-	color.Blue("|________|___________________________|")
-	color.Blue("|   4    |  Конфигурация сервера     |")
-	color.Blue("|________|___________________________|")
-	color.Blue("|   5    |  Выход                    |")
-	color.Blue("|________|___________________________|")
+	for i := 0; i < 10; i++ {
+		options = append(options, fmt.Sprintf("Option %d", i))
+	}
+
+	for i := 0; i < 5; i++ {
+		options = append(options, fmt.Sprintf("You can use fuzzy searching (%d)", i))
+	}
+
+	selectedOptions, _ := pterm.DefaultInteractiveMultiselect.WithOptions(options).Show()
+	pterm.Info.Printfln("Selected options: %s", pterm.Green(selectedOptions))
+	/* 	color.HiCyan("  Доступные функции ")
+	   	color.Blue("[1]   Загрузить файл")
+	   	color.Blue("[2]   Скачать файл")
+	   	color.Blue("[3]   Список файлов")
+	   	color.Blue("[4]   Конфигурация")
+	   	color.Blue("[5]    Выход") */
 
 	for {
 		stdReader := bufio.NewReader(os.Stdin)
 
-		color.HiGreen("Номер функции >>> ")
+		color.HiCyan("Номер функции")
 
 		cmd, _ := stdReader.ReadString('\n')
 		cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
@@ -117,20 +129,22 @@ func Run() (err error) {
 			client.ListFiles(connect)
 		case "4":
 			Configure()
+			readConfig()
 		case "5":
 			client.Exit(connect)
 		}
 	}
 
 }
-func readConfig() []string {
+
+func readConfig() {
 	file, err := os.Open("confRD.conf")
-	var ipArray [2]string
 
 	if err != nil {
 		color.Red("Ошибка конфигурирования")
 		os.Exit(1)
 	}
+
 	defer file.Close()
 
 	data := make([]byte, 64)
@@ -143,7 +157,6 @@ func readConfig() []string {
 		color.Green(string(data[:n]))
 
 	}
-	return
 
 }
 

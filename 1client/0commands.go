@@ -36,13 +36,13 @@ func showMainwindow() {
 func Upload(conn net.Conn) {
 	stdReader := bufio.NewReader(os.Stdin)
 
-	color.Magenta("Имя файла >>> ")
+	color.Magenta("Имя файла")
 
 	cmd, _ := stdReader.ReadString('\n')
 	cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
 
 	filename := strings.ToLower(cmdArr[0])
-	color.Magenta("Пароль для файла(не меньше 8 символов) >>> ")
+	color.Magenta("Пароль для файла(не меньше 8 символов)")
 	myFPass, _ := stdReader.ReadString('\n')
 
 	sendFile(conn, filename, strings.Trim(myFPass, "\n"))
@@ -51,14 +51,14 @@ func Upload(conn net.Conn) {
 }
 func Download(conn net.Conn) {
 	stdReader := bufio.NewReader(os.Stdin)
-	color.Magenta("Имя файла >>> ")
+	color.Magenta("Имя файла")
 
 	cmd, _ := stdReader.ReadString('\n')
 	cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
 
 	filename := strings.ToLower(cmdArr[0])
 
-	color.Magenta("Файловый пароль  >>> ")
+	color.Magenta("Файловый пароль")
 	myFPass, _ := stdReader.ReadString('\n')
 	if len(myFPass) < 8 {
 		color.Red("Слишком короткий пароль")

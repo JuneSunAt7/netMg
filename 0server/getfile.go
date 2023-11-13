@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/EwRvp7LV7/45586694crypto/logger"
+	"github.com/JuneSunAt7/netMg/logger"
 )
 
 func getFile(conn net.Conn, name1 string, fs string) {
