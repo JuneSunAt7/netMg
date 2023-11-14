@@ -1,14 +1,14 @@
 package client
 
 import (
-	"bufio"
-
+	"fmt"
 	"net"
-	"os"
 	"path/filepath"
-	"strings"
+
+	"time"
 
 	"github.com/fatih/color"
+	"github.com/pterm/pterm"
 )
 
 var ROOT = "filestore/clientDir"
@@ -19,48 +19,62 @@ func init() {
 }
 
 func Upload(conn net.Conn) {
-	stdReader := bufio.NewReader(os.Stdin)
+	fname, _ := pterm.DefaultInteractiveTextInput.Show("Имя файла")
+	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль для файла")
 
-	color.Magenta("Имя файла")
+	p, _ := pterm.DefaultProgressbar.WithTotal(5).WithTitle("Downloading stuff").Start()
 
-	cmd, _ := stdReader.ReadString('\n')
-	cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
-
-	filename := strings.ToLower(cmdArr[0])
-	color.Magenta("Пароль для файла(не меньше 8 символов)")
-	myFPass, _ := stdReader.ReadString('\n')
-
-	sendFile(conn, filename, strings.Trim(myFPass, "\n"))
+	for i := 0; i < p.Total; i++ {
+		if i == 6 {
+			time.Sleep(time.Second * 3) // Simulate a slow download.
+		}
+		p.UpdateTitle("Загрузка в облако")         // Update the title of the progressbar.
+		pterm.Success.Println("Загрузка в облако") // If a progressbar is running, each print will be printed above the progressbar.
+		p.Increment()                              // Increment the progressbar by one. Use Add(x int) to increment by a custom amount.
+		time.Sleep(time.Millisecond * 350)         // Sleep 350 milliseconds.
+	}
+	sendFile(conn, fname, passwd+"\n")
 
 }
 func Download(conn net.Conn) {
-	stdReader := bufio.NewReader(os.Stdin)
-	color.Magenta("Имя файла")
+	fname, _ := pterm.DefaultInteractiveTextInput.Show("Имя файла")
+	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Файловый пароль")
+	p, _ := pterm.DefaultProgressbar.WithTotal(5).WithTitle("Downloading stuff").Start()
 
-	cmd, _ := stdReader.ReadString('\n')
-	cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
-
-	filename := strings.ToLower(cmdArr[0])
-
-	color.Magenta("Файловый пароль")
-	myFPass, _ := stdReader.ReadString('\n')
-	if len(myFPass) < 8 {
-		color.Red("Слишком короткий пароль")
-		return
+	for i := 0; i < p.Total; i++ {
+		if i == 6 {
+			time.Sleep(time.Second * 3) // Simulate a slow download.
+		}
+		p.UpdateTitle("Выгрузка из облака")         // Update the title of the progressbar.
+		pterm.Success.Println("Выгрузка из облака") // If a progressbar is running, each print will be printed above the progressbar.
+		p.Increment()                               // Increment the progressbar by one. Use Add(x int) to increment by a custom amount.
+		time.Sleep(time.Millisecond * 350)          // Sleep 350 milliseconds.
 	}
-
-	getFile(conn, filename, strings.Trim(myFPass, "\n"))
-
+	getFile(conn, fname, passwd+"\n")
 }
 func ListFiles(conn net.Conn) {
 	conn.Write([]byte("ls\n"))
 	buffer := make([]byte, 4096)
 	n, _ := conn.Read(buffer)
-	color.Blue(string(buffer[:n]))
+
+	fmt.Println(string(buffer[:n]))
+
+	/* pterm.DefaultBarChart.WithBars([]pterm.Bar{
+		{Label: "A", Value: 10},
+		{Label: "B", Value: 20},
+		{Label: "C", Value: 30},
+		{Label: "D", Value: 40},
+		{Label: "E", Value: 50},
+		{Label: "F", Value: 40},
+		{Label: "G", Value: 30},
+		{Label: "H", Value: 20},
+		{Label: "I", Value: 10},
+	}).WithHorizontal().WithWidth(5).Render() */
 
 }
 
 func Exit(conn net.Conn) {
 	conn.Write([]byte("close\n"))
 	color.Blue("Выход из системы")
+
 }

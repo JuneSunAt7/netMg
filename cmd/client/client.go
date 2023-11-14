@@ -32,9 +32,6 @@ func createConfig(ip, port string) {
 
 func Configure() {
 	stdReader := bufio.NewReader(os.Stdin)
-	color.Magenta("")
-	color.Magenta("")
-	color.Magenta("")
 
 	color.Magenta("Текущий файл конфишурации: confRD.conf\nЖелаете изменить его? \n[1 - Изменить 2 - Отмена]")
 	cmd, _ := stdReader.ReadString('\n')
@@ -116,6 +113,7 @@ func Run() (err error) {
 			readConfig()
 		case "Выход":
 			client.Exit(connect)
+			return
 		}
 	}
 
