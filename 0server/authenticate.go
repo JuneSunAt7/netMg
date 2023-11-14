@@ -42,8 +42,10 @@ func AuthenticateClient(conn net.Conn) error {
 	//validate user
 	reader.Scan()
 	uname := reader.Text()
+	logger.Println(uname)
 	reader.Scan()
 	passwd := reader.Text()
+	logger.Println(passwd)
 
 	for _, cred := range *creds {
 

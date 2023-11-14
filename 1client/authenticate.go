@@ -1,42 +1,41 @@
 package client
 
 import (
-	"bufio"
 	"errors"
 	"net"
-	"os"
 
 	"github.com/fatih/color"
+	"github.com/pterm/pterm"
 )
 
 func AuthenticateClient(conn net.Conn) error {
-
-	stdreader := bufio.NewReader(os.Stdin)
 
 	buffer := make([]byte, 1024)
 	n, err := conn.Read(buffer)
 	if err != nil {
 		return err
 	}
-	color.Green(string(buffer[:n]))
+	pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgLightGreen)).Println(string(buffer[:n]))
 
-	color.Green(".....Аутенфикация.....")
-	color.HiGreen("Имя")
-	uname, _ := stdreader.ReadString('\n')
-	color.HiGreen("Пароль")
-	passwd, _ := stdreader.ReadString('\n')
-	conn.Write([]byte(uname))
-	conn.Write([]byte(passwd))
+	pterm.DefaultHeader.WithFullWidth().WithBackgroundStyle(pterm.NewStyle(pterm.BgGreen)).
+		WithTextStyle(pterm.NewStyle(pterm.FgBlack)).Println("Аутенфикация")
+
+	uname, _ := pterm.DefaultInteractiveTextInput.Show("Имя")
+	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль")
+	logger := pterm.DefaultLogger
+	logger.Info("Выполняется вход", logger.Args("пользователь", uname))
+
+	conn.Write([]byte(uname + "\n" + passwd + "\n"))
+
 	n, err = conn.Read(buffer)
 	if err != nil {
 		return err
 	}
 
 	if string(buffer[:n]) == "1" {
-		color.Green("Выполняется вход")
 		return nil
 	} else {
 		color.Red("Неверный логин или пароль ")
-		return errors.New("Неверный логин или пароль ")
+		return errors.New("неверный логин или пароль ")
 	}
 }

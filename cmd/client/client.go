@@ -11,6 +11,7 @@ import (
 
 	"fmt"
 
+	"atomicgo.dev/keyboard/keys"
 	"github.com/fatih/color"
 	"github.com/pterm/pterm"
 
@@ -70,8 +71,6 @@ func Run() (err error) {
 			return err
 		}
 
-		color.Green("TCP server is Connected @ ", HOST, ":", PORT)
-
 	} else {
 
 		conf := &tls.Config{
@@ -93,21 +92,23 @@ func Run() (err error) {
 	}
 	var options []string
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		options = append(options, fmt.Sprintf("Option %d", i))
 	}
 
-	for i := 0; i < 5; i++ {
-		options = append(options, fmt.Sprintf("You can use fuzzy searching (%d)", i))
-	}
-
-	selectedOptions, _ := pterm.DefaultInteractiveMultiselect.WithOptions(options).Show()
+	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
+	printer.Filter = false
+	printer.KeyConfirm = keys.Enter
+	printer.KeySelect = keys.Space
+	printer.Checkmark = &pterm.Checkmark{Checked: pterm.Green("+"), Unchecked: pterm.Red("-")}
+	selectedOptions, _ := printer.Show()
 	pterm.Info.Printfln("Selected options: %s", pterm.Green(selectedOptions))
+
 	/* 	color.HiCyan("  Доступные функции ")
 	   	color.Blue("[1]   Загрузить файл")
 	   	color.Blue("[2]   Скачать файл")
 	   	color.Blue("[3]   Список файлов")
-	   	color.Blue("[4]   Конфигурация")
+	   	color.Blue("[4]   Коsнфигурация")
 	   	color.Blue("[5]    Выход") */
 
 	for {
