@@ -92,46 +92,29 @@ func Run() (err error) {
 	}
 	var options []string
 
-	for i := 0; i < 5; i++ {
-		options = append(options, fmt.Sprintf("Option %d", i))
-	}
+	options = append(options, fmt.Sprintf("Загрузить файл"))
+	options = append(options, fmt.Sprintf("Скачать файл"))
+	options = append(options, fmt.Sprintf("Список файлов"))
+	options = append(options, fmt.Sprintf("Конфигурация"))
+	options = append(options, fmt.Sprintf("Выход"))
 
 	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
 	printer.Filter = false
 	printer.KeyConfirm = keys.Enter
-	printer.KeySelect = keys.Space
-	printer.Checkmark = &pterm.Checkmark{Checked: pterm.Green("+"), Unchecked: pterm.Red("-")}
-	selectedOptions, _ := printer.Show()
-	pterm.Info.Printfln("Selected options: %s", pterm.Green(selectedOptions))
-
-	/* 	color.HiCyan("  Доступные функции ")
-	   	color.Blue("[1]   Загрузить файл")
-	   	color.Blue("[2]   Скачать файл")
-	   	color.Blue("[3]   Список файлов")
-	   	color.Blue("[4]   Коsнфигурация")
-	   	color.Blue("[5]    Выход") */
 
 	for {
-		stdReader := bufio.NewReader(os.Stdin)
-
-		color.HiCyan("Номер функции")
-
-		cmd, _ := stdReader.ReadString('\n')
-		cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
-
-		operation := strings.ToLower(cmdArr[0])
-
-		switch operation {
-		case "1":
+		selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
+		switch selectedOptions {
+		case "Загрузить файл":
 			client.Upload(connect)
-		case "2":
+		case "Скачать файл":
 			client.Download(connect)
-		case "3":
+		case "Список файлов":
 			client.ListFiles(connect)
-		case "4":
+		case "Конфигурация":
 			Configure()
 			readConfig()
-		case "5":
+		case "Выход":
 			client.Exit(connect)
 		}
 	}

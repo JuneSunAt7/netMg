@@ -17,21 +17,6 @@ var ROOT = "filestore/clientDir"
 func init() {
 	ROOT, _ = filepath.Abs("filestore/clientDir")
 }
-func showMainwindow() {
-	color.HiCyan("           Доступные функции             ")
-	color.Blue("______________________________________")
-	color.Blue("|   1    |  Загрузить файл           |")
-	color.Blue("|________|___________________________|")
-	color.Blue("|   2    |  Скачать файл             |")
-	color.Blue("|________|___________________________|")
-	color.Blue("|   3    |  Список файлов            |")
-	color.Blue("|________|___________________________|")
-	color.Blue("|   4    |  Конфигурация сервера     |")
-	color.Blue("|________|___________________________|")
-	color.Blue("|   5    |  Выход                    |")
-	color.Blue("|________|___________________________|")
-
-}
 
 func Upload(conn net.Conn) {
 	stdReader := bufio.NewReader(os.Stdin)
@@ -46,7 +31,6 @@ func Upload(conn net.Conn) {
 	myFPass, _ := stdReader.ReadString('\n')
 
 	sendFile(conn, filename, strings.Trim(myFPass, "\n"))
-	showMainwindow()
 
 }
 func Download(conn net.Conn) {
@@ -66,7 +50,6 @@ func Download(conn net.Conn) {
 	}
 
 	getFile(conn, filename, strings.Trim(myFPass, "\n"))
-	showMainwindow()
 
 }
 func ListFiles(conn net.Conn) {
@@ -74,7 +57,7 @@ func ListFiles(conn net.Conn) {
 	buffer := make([]byte, 4096)
 	n, _ := conn.Read(buffer)
 	color.Blue(string(buffer[:n]))
-	showMainwindow()
+
 }
 
 func Exit(conn net.Conn) {
