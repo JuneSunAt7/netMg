@@ -15,6 +15,11 @@ import (
 	client "github.com/JuneSunAt7/netMg/1client"
 )
 
+const (
+	PORT = "2121"
+	HOST = "localhost"
+)
+
 func createConfig(ip, port string) {
 	conf, err := os.Create("confRD.conf")
 
@@ -32,7 +37,8 @@ func Configure() {
 
 	options = append(options, fmt.Sprintf("Изменить конфигурацию"))
 	options = append(options, fmt.Sprintf("Удалить конфигурацию"))
-	options = append(options, fmt.Sprintf("Отмена"))
+	options = append(options, fmt.Sprintf("Сконфигурировать"))
+	options = append(options, fmt.Sprintf("Назад"))
 
 	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
 	printer.Filter = false
@@ -49,7 +55,9 @@ func Configure() {
 		case "Удалить конфигурацию":
 			createConfig("", "")
 			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println("Конфигурация очищена")
-		case "Отмена":
+		case "Сконфигурировать":
+			readConfig()
+		case "Назад":
 			return
 		}
 	}
@@ -108,7 +116,6 @@ func Run() (err error) {
 			client.ListFiles(connect)
 		case "Конфигурация":
 			Configure()
-			readConfig()
 		case "Выход":
 			client.Exit(connect)
 			return
@@ -118,6 +125,7 @@ func Run() (err error) {
 }
 
 func readConfig() {
+
 	file, err := os.Open("confRD.conf")
 
 	if err != nil {
@@ -134,17 +142,17 @@ func readConfig() {
 		if err == io.EOF { // если конец файла
 			break // выходим из цикла
 		}
+		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println(n)
 		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println("Текущая конфигурация:")
-		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgCyan)).Println(string(data[:n]))
 
+		/* arrayConf := strings.Split(string(data[:n]), "\n") */
 	}
-
+	/* const (
+		PORT = arrayConf[0]
+		HOST = arrayConf[1]
+	)
+	*/
 }
-
-const (
-	PORT = "2121"
-	HOST = "localhost"
-)
 
 func main() {
 	Run()
