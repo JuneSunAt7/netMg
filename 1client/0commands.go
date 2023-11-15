@@ -1,13 +1,11 @@
 package client
 
 import (
-	"fmt"
 	"net"
 	"path/filepath"
 
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/pterm/pterm"
 )
 
@@ -56,25 +54,12 @@ func ListFiles(conn net.Conn) {
 	conn.Write([]byte("ls\n"))
 	buffer := make([]byte, 4096)
 	n, _ := conn.Read(buffer)
-
-	fmt.Println(string(buffer[:n]))
-
-	/* pterm.DefaultBarChart.WithBars([]pterm.Bar{
-		{Label: "A", Value: 10},
-		{Label: "B", Value: 20},
-		{Label: "C", Value: 30},
-		{Label: "D", Value: 40},
-		{Label: "E", Value: 50},
-		{Label: "F", Value: 40},
-		{Label: "G", Value: 30},
-		{Label: "H", Value: 20},
-		{Label: "I", Value: 10},
-	}).WithHorizontal().WithWidth(5).Render() */
+	pterm.FgGreen.Println(string(buffer[:n]))
 
 }
 
 func Exit(conn net.Conn) {
 	conn.Write([]byte("close\n"))
-	color.Blue("Выход из системы")
+	pterm.FgGreen.Println("Выход из системы")
 
 }

@@ -24,7 +24,6 @@ func AuthenticateClient(conn net.Conn) error {
 	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль")
 	logger := pterm.DefaultLogger
 	logger.Info("Выполняется вход", logger.Args("пользователь", uname))
-
 	conn.Write([]byte(uname + "\n" + passwd + "\n"))
 
 	n, err = conn.Read(buffer)

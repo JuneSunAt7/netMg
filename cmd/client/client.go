@@ -1,18 +1,15 @@
 package main
 
 import (
-	"bufio"
 	"crypto/tls"
 	"flag"
 	"io"
 	"net"
 	"os"
-	"strings"
 
 	"fmt"
 
 	"atomicgo.dev/keyboard/keys"
-	"github.com/fatih/color"
 	"github.com/pterm/pterm"
 
 	client "github.com/JuneSunAt7/netMg/1client"
@@ -22,37 +19,39 @@ func createConfig(ip, port string) {
 	conf, err := os.Create("confRD.conf")
 
 	if err != nil {
-		color.Red("Ошибка создания файла")
+		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgLightRed)).Printfln("Ошибка создания файла")
 	}
 
 	conf.Write([]byte(port + "\n" + ip))
 	defer conf.Close()
-	color.Green("Успешное создание файла")
+	pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgBlue)).Printfln("Успешное создание файла")
 }
 
 func Configure() {
-	stdReader := bufio.NewReader(os.Stdin)
+	var options []string
 
-	color.Magenta("Текущий файл конфишурации: confRD.conf\nЖелаете изменить его? \n[1 - Изменить 2 - Отмена]")
-	cmd, _ := stdReader.ReadString('\n')
-	cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
+	options = append(options, fmt.Sprintf("Изменить конфигурацию"))
+	options = append(options, fmt.Sprintf("Удалить конфигурацию"))
+	options = append(options, fmt.Sprintf("Отмена"))
 
-	operation := strings.ToLower(cmdArr[0])
+	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
+	printer.Filter = false
+	printer.KeyConfirm = keys.Enter
 
-	switch operation {
-	case "1":
-		stdReader := bufio.NewReader(os.Stdin)
-		color.Green("IP   |    PORT ")
-
-		cmd, _ := stdReader.ReadString('\n')
-		cmdArr := strings.Fields(strings.Trim(cmd, "\n"))
-		ip := strings.ToLower(cmdArr[0])
-
-		port := strings.ToLower(cmdArr[1])
-
-		createConfig(ip, port)
-	case "2":
-		os.Exit(0)
+	for {
+		selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
+		switch selectedOptions {
+		case "Изменить конфигурацию":
+			ip, _ := pterm.DefaultInteractiveTextInput.Show("IP")
+			port, _ := pterm.DefaultInteractiveTextInput.Show("PORT")
+			createConfig(ip, port)
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println("Конфигурация изменена и сохранена")
+		case "Удалить конфигурацию":
+			createConfig("", "")
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println("Конфигурация очищена")
+		case "Отмена":
+			return
+		}
 	}
 }
 func Run() (err error) {
@@ -78,8 +77,6 @@ func Run() (err error) {
 		if err != nil {
 			return err
 		}
-
-		color.GreenString("TCP TLS Server is Connected @ ", HOST, ":", PORT)
 	}
 
 	defer connect.Close()
@@ -87,6 +84,7 @@ func Run() (err error) {
 	if err := client.AuthenticateClient(connect); err != nil {
 		return err
 	}
+
 	var options []string
 
 	options = append(options, fmt.Sprintf("Загрузить файл"))
@@ -123,7 +121,7 @@ func readConfig() {
 	file, err := os.Open("confRD.conf")
 
 	if err != nil {
-		color.Red("Ошибка конфигурирования")
+		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgLightRed)).Println("Ошибка конфигурирования")
 		os.Exit(1)
 	}
 
@@ -136,7 +134,8 @@ func readConfig() {
 		if err == io.EOF { // если конец файла
 			break // выходим из цикла
 		}
-		color.Green(string(data[:n]))
+		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println("Текущая конфигурация:")
+		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgCyan)).Println(string(data[:n]))
 
 	}
 
