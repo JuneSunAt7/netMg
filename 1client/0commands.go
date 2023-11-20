@@ -75,5 +75,44 @@ func CertPasswd() {
 	printer := pterm.DefaultInteractiveMultiselect.WithOptions(certoptions)
 	printer.Filter = false
 	printer.KeyConfirm = keys.Enter
+	for {
+		selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(certoptions).Show()
+		switch selectedOptions {
+		case "Доступные сертификаты":
+
+		case "Изменить пароль и логин":
+
+		case "Создать сертификат":
+
+		case "Назад":
+			return
+		}
+	}
+
+}
+func Autoreserved() {
+	var options []string
+
+	options = append(options, fmt.Sprintf("Календарь авторезервирования"))
+	options = append(options, fmt.Sprintf("Файлы для авторезервирования"))
+	options = append(options, fmt.Sprintf("Настройки"))
+	options = append(options, fmt.Sprintf("Назад"))
+
+	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
+	printer.Filter = false
+	printer.KeyConfirm = keys.Enter
+	for {
+		selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
+		switch selectedOptions {
+		case "Календарь авторезервирования":
+
+		case "Файлы для авторезервирования":
+
+		case "Настройки":
+
+		case "Назад":
+			return
+		}
+	}
 
 }
