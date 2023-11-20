@@ -95,6 +95,6 @@ func checkFileMD5Hash(path string) {
 	if _, err := io.Copy(h, hashFile); err != nil {
 		log.Println(err)
 	}
-	statsh, _ := hashFile.Stat()
-	log.Printf("File %s\nmd5 hash: %x\n", statsh.Name(), h.Sum(nil))
+	//statsh, _ := hashFile.Stat()
+	log.Printf("Хеш: %x\n", h.Sum(nil))
 }

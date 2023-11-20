@@ -99,6 +99,8 @@ func Run() (err error) {
 	options = append(options, fmt.Sprintf("Скачать файл"))
 	options = append(options, fmt.Sprintf("Список файлов"))
 	options = append(options, fmt.Sprintf("Конфигурация"))
+	options = append(options, fmt.Sprintf("Сертификаты и пароли"))
+	options = append(options, fmt.Sprintf("Авторезервирование"))
 	options = append(options, fmt.Sprintf("Выход"))
 
 	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
@@ -116,6 +118,9 @@ func Run() (err error) {
 			client.ListFiles(connect)
 		case "Конфигурация":
 			Configure()
+		case "Сертификаты и пароли":
+			client.CertPasswd()
+
 		case "Выход":
 			client.Exit(connect)
 			return

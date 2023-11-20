@@ -35,8 +35,8 @@ func getFile(conn net.Conn, name1 string, fs string) {
 	//Эта функция использует буфер в 32 КБ
 	io.Copy(outputFile, io.LimitReader(conn, fileSize)) //TODO timeout wating
 
-	logger.Println("File " + name + " downloaded successfully")
+	logger.Println("Файл  " + name + " загружен в облако")
 	// conn.Write([]byte("File Downloaded successfully", fnid))
-	fmt.Fprint(conn, "File "+name+" downloaded successfully. UUID file name:\n", name)
+	fmt.Fprint(conn, "Файл  "+name+" загружен в облако успешно\n")
 
 }

@@ -1,11 +1,12 @@
 package client
 
 import (
+	"fmt"
 	"net"
 	"path/filepath"
-
 	"time"
 
+	"atomicgo.dev/keyboard/keys"
 	"github.com/pterm/pterm"
 )
 
@@ -13,7 +14,7 @@ var ROOT = "filestore/clientDir"
 
 // dynamic root dir
 func init() {
-	ROOT, _ = filepath.Abs("filestore/clientDir")
+	ROOT, _ = filepath.Abs("filestore/storeclient")
 }
 
 func Upload(conn net.Conn) {
@@ -61,5 +62,18 @@ func ListFiles(conn net.Conn) {
 func Exit(conn net.Conn) {
 	conn.Write([]byte("close\n"))
 	pterm.FgGreen.Println("Выход из системы")
+
+}
+func CertPasswd() {
+	var certoptions []string
+
+	certoptions = append(certoptions, fmt.Sprintf("Доступные сертификаты"))
+	certoptions = append(certoptions, fmt.Sprintf("Изменить пароль и логин"))
+	certoptions = append(certoptions, fmt.Sprintf("Создать сертификат"))
+	certoptions = append(certoptions, fmt.Sprintf("Назад"))
+
+	printer := pterm.DefaultInteractiveMultiselect.WithOptions(certoptions)
+	printer.Filter = false
+	printer.KeyConfirm = keys.Enter
 
 }
