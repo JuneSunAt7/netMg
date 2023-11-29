@@ -21,16 +21,16 @@ func Upload(conn net.Conn) {
 	fname, _ := pterm.DefaultInteractiveTextInput.Show("Имя файла")
 	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль для файла")
 
-	p, _ := pterm.DefaultProgressbar.WithTotal(5).WithTitle("Downloading stuff").Start()
+	p, _ := pterm.DefaultProgressbar.WithTotal(10).WithTitle("...Загрузка...").Start()
 
 	for i := 0; i < p.Total; i++ {
 		if i == 6 {
-			time.Sleep(time.Second * 3) // Simulate a slow download.
+			time.Sleep(time.Second * 3) // ProgressBar - uploader
 		}
-		p.UpdateTitle("Загрузка в облако")         // Update the title of the progressbar.
-		pterm.Success.Println("Загрузка в облако") // If a progressbar is running, each print will be printed above the progressbar.
-		p.Increment()                              // Increment the progressbar by one. Use Add(x int) to increment by a custom amount.
-		time.Sleep(time.Millisecond * 350)         // Sleep 350 milliseconds.
+		p.UpdateTitle("Загрузка в облако")
+		pterm.Success.Println("Загрузка в облако")
+		p.Increment()
+		time.Sleep(time.Millisecond * 350)
 	}
 	sendFile(conn, fname, passwd+"\n")
 
@@ -42,12 +42,12 @@ func Download(conn net.Conn) {
 
 	for i := 0; i < p.Total; i++ {
 		if i == 6 {
-			time.Sleep(time.Second * 3) // Simulate a slow download.
+			time.Sleep(time.Second * 3)
 		}
-		p.UpdateTitle("Выгрузка из облака")         // Update the title of the progressbar.
-		pterm.Success.Println("Выгрузка из облака") // If a progressbar is running, each print will be printed above the progressbar.
-		p.Increment()                               // Increment the progressbar by one. Use Add(x int) to increment by a custom amount.
-		time.Sleep(time.Millisecond * 350)          // Sleep 350 milliseconds.
+		p.UpdateTitle("Выгрузка из облака") // ProgressBar - downloader
+		pterm.Success.Println("Выгрузка из облака")
+		p.Increment()
+		time.Sleep(time.Millisecond * 350)
 	}
 	getFile(conn, fname, passwd+"\n")
 }

@@ -46,8 +46,7 @@ func getFile(conn net.Conn, fname string, myFPass string) {
 	io.Copy(outputFile, bytes.NewReader(arrDec))
 	defer outputFile.Close()
 
-	// conn.Write([]byte("File Downloaded successfully"))
-	log.Println("File Downloaded successfully")
+	log.Println("Файл скачан успешно")
 
 	checkFileMD5Hash(ROOT + "/" + fname)
 }

@@ -13,7 +13,7 @@ import (
 func getFile(conn net.Conn, name1 string, fs string) {
 
 	fileSize, err := strconv.ParseInt(fs, 10, 64)
-	if err != nil || fileSize == -1 {
+	if err != nil || fileSize == -1 { // The size must not be less than zero!
 		logger.Println(err.Error())
 		conn.Write([]byte("file size error"))
 		return
@@ -32,11 +32,10 @@ func getFile(conn net.Conn, name1 string, fs string) {
 
 	conn.Write([]byte("200 Start upload!"))
 
-	//Эта функция использует буфер в 32 КБ
+	//Use buff size 32 bytes
 	io.Copy(outputFile, io.LimitReader(conn, fileSize)) //TODO timeout wating
 
 	logger.Println("Файл  " + name + " загружен в облако")
-	// conn.Write([]byte("File Downloaded successfully", fnid))
 	fmt.Fprint(conn, "Файл  "+name+" загружен в облако успешно\n")
 
 }

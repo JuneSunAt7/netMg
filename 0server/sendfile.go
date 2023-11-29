@@ -33,7 +33,7 @@ func sendFile(conn net.Conn, name string) {
 
 	str := strings.Trim(string(buf[:n]), "\n")
 	commandArr := strings.Fields(str)
-	if commandArr[0] != "200" {
+	if commandArr[0] != "200" { // Ansver-code 200(succesfully)
 		logger.Println(str)
 		return
 	}

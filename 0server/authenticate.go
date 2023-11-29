@@ -11,7 +11,7 @@ import (
 	"github.com/JuneSunAt7/netMg/logger"
 )
 
-type Credentials struct {
+type Credentials struct { // TODO #1 use database file
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
@@ -25,7 +25,7 @@ func (p *CredArr) FromJSON(r io.Reader) error {
 
 func GetCred() *CredArr {
 
-	f, _ := os.Open("credential.json")
+	f, _ := os.Open("credential.json") // TODO #2 credentilas.db
 	var creds CredArr
 	creds.FromJSON(f)
 	return &creds
@@ -39,13 +39,13 @@ func AuthenticateClient(conn net.Conn) error {
 	}
 
 	reader := bufio.NewScanner(conn)
-	//validate user
+
+	// Validate user
+
 	reader.Scan()
 	uname := reader.Text()
-	logger.Println(uname)
 	reader.Scan()
 	passwd := reader.Text()
-	logger.Println(passwd)
 
 	for _, cred := range *creds {
 

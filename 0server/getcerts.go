@@ -1,7 +1,6 @@
 package server
 
 import (
-	"bufio"
 	"fmt"
 	"io/ioutil"
 	"net"
@@ -10,7 +9,7 @@ import (
 )
 
 func getListCert(conn net.Conn) {
-
+	// This function is similar to the function for getting a list of files.
 	files, err := ioutil.ReadDir(CERT)
 	if err != nil {
 		conn.Write([]byte(err.Error()))
@@ -29,14 +28,4 @@ func getListCert(conn net.Conn) {
 	}
 	conn.Write([]byte(fileINFO))
 
-}
-func changePass(conn net.Conn) {
-	reader := bufio.NewScanner(conn)
-	//validate user
-	reader.Scan()
-	uname := reader.Text()
-	logger.Println(uname)
-	reader.Scan()
-	passwd := reader.Text()
-	logger.Println(passwd)
 }
