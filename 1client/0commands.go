@@ -64,11 +64,10 @@ func Exit(conn net.Conn) {
 	pterm.FgGreen.Println("Выход из системы")
 
 }
-func CertPasswd() {
+func CertPasswd(conn net.Conn) {
 	var certoptions []string
 
 	certoptions = append(certoptions, fmt.Sprintf("Доступные сертификаты"))
-	certoptions = append(certoptions, fmt.Sprintf("Изменить пароль и логин"))
 	certoptions = append(certoptions, fmt.Sprintf("Создать сертификат"))
 	certoptions = append(certoptions, fmt.Sprintf("Назад"))
 
@@ -79,9 +78,7 @@ func CertPasswd() {
 		selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(certoptions).Show()
 		switch selectedOptions {
 		case "Доступные сертификаты":
-
-		case "Изменить пароль и логин":
-
+			AllCertificates(conn)
 		case "Создать сертификат":
 
 		case "Назад":

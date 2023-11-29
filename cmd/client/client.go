@@ -119,7 +119,7 @@ func Run() (err error) {
 		case "Конфигурация":
 			Configure()
 		case "Сертификаты и пароли":
-			client.CertPasswd()
+			client.CertPasswd(connect)
 		case "Авторезервирование":
 			client.Autoreserved()
 		case "Выход":

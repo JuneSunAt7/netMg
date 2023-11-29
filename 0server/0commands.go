@@ -11,9 +11,11 @@ import (
 )
 
 var ROOT = "filestore"
+var CERT = "certificates"
 
 func init() {
 	ROOT, _ = filepath.Abs("filestore")
+	CERT, _ = filepath.Abs("certificates")
 }
 
 func HandleServer(conn net.Conn) {
@@ -42,11 +44,15 @@ func HandleServer(conn net.Conn) {
 		case "upload":
 			logger.Println("Upload Request")
 			getFile(conn, commandArr[1], commandArr[2])
-
 		case "ls":
 			logger.Println("ls")
 			getListFiles(conn)
-
+		case "certs":
+			logger.Println("certs")
+			getListCert(conn)
+		case "chgauth":
+			logger.Println("change passwords and uname")
+			changePass(conn)
 		case "close":
 			logger.Println("closed")
 			return
