@@ -25,7 +25,7 @@ func (p *CredArr) FromJSON(r io.Reader) error {
 
 func GetCred() *CredArr {
 
-	f, _ := os.Open("credential.json") // TODO #2 credentilas.db
+	f, _ := os.Open("user_creds.db") // TODO #2 credentilas.db
 	var creds CredArr
 	creds.FromJSON(f)
 	return &creds

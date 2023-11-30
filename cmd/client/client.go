@@ -3,9 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"flag"
-	"io"
 	"net"
-	"os"
 
 	"fmt"
 
@@ -20,48 +18,6 @@ const (
 	HOST = "localhost"
 )
 
-func createConfig(ip, port string) {
-	conf, err := os.Create("confRD.conf")
-
-	if err != nil {
-		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgLightRed)).Printfln("Ошибка создания файла")
-	}
-
-	conf.Write([]byte(port + "\n" + ip))
-	defer conf.Close()
-	pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgBlue)).Printfln("Успешное создание файла")
-}
-
-func Configure() {
-	var options []string
-
-	options = append(options, fmt.Sprintf("Изменить конфигурацию"))
-	options = append(options, fmt.Sprintf("Удалить конфигурацию"))
-	options = append(options, fmt.Sprintf("Сконфигурировать"))
-	options = append(options, fmt.Sprintf("Назад"))
-
-	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
-	printer.Filter = false
-	printer.KeyConfirm = keys.Enter
-
-	for {
-		selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
-		switch selectedOptions {
-		case "Изменить конфигурацию":
-			ip, _ := pterm.DefaultInteractiveTextInput.Show("IP")
-			port, _ := pterm.DefaultInteractiveTextInput.Show("PORT")
-			createConfig(ip, port)
-			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println("Конфигурация изменена и сохранена")
-		case "Удалить конфигурацию":
-			createConfig("", "")
-			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println("Конфигурация очищена")
-		case "Сконфигурировать":
-			readConfig()
-		case "Назад":
-			return
-		}
-	}
-}
 func Run() (err error) {
 
 	var connect net.Conn
@@ -117,7 +73,8 @@ func Run() (err error) {
 		case "Список файлов":
 			client.ListFiles(connect)
 		case "Конфигурация":
-			Configure()
+			client.Configure()
+
 		case "Сертификаты и пароли":
 			client.CertPasswd(connect)
 		case "Авторезервирование":
@@ -128,36 +85,6 @@ func Run() (err error) {
 		}
 	}
 
-}
-
-func readConfig() {
-
-	file, err := os.Open("confRD.conf")
-
-	if err != nil {
-		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgLightRed)).Println("Ошибка конфигурирования")
-		os.Exit(1)
-	}
-
-	defer file.Close()
-
-	data := make([]byte, 64)
-
-	for {
-		n, err := file.Read(data)
-		if err == io.EOF { // если конец файла
-			break // выходим из цикла
-		}
-		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println(n)
-		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Println("Текущая конфигурация:")
-
-		/* arrayConf := strings.Split(string(data[:n]), "\n") */
-	}
-	/* const (
-		PORT = arrayConf[0]
-		HOST = arrayConf[1]
-	)
-	*/
 }
 
 func main() {
