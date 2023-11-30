@@ -10,7 +10,7 @@ import (
 
 func getListFiles(conn net.Conn) {
 
-	files, err := ioutil.ReadDir(ROOT) // Read all filenames from filestore.
+	files, err := ioutil.ReadDir(ROOT + "/" + Uname) // Read all filenames from filestore.
 	if err != nil {
 		conn.Write([]byte(err.Error()))
 		logger.Println(err.Error())

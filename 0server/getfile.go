@@ -22,7 +22,12 @@ func getFile(conn net.Conn, name1 string, fs string) {
 	name := name1
 	fmt.Println(name)
 
-	outputFile, err := os.Create(ROOT + "/" + name)
+	errmk := os.Mkdir(ROOT+"/"+Uname, 0777)
+	if errmk != nil {
+		fmt.Println("Error create dir")
+	}
+
+	outputFile, err := os.Create(ROOT + "/" + Uname + "/" + name)
 	if err != nil {
 		logger.Println(err.Error())
 		conn.Write([]byte(err.Error()))

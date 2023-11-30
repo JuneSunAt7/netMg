@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net"
+	"os"
 
 	"github.com/JuneSunAt7/netMg/logger"
 )
 
 func getListCert(conn net.Conn) {
 	// This function is similar to the function for getting a list of files.
-	files, err := ioutil.ReadDir(CERT)
+	files, err := ioutil.ReadDir(CERT + "/" + Uname)
 	if err != nil {
 		conn.Write([]byte(err.Error()))
 		logger.Println(err.Error())
@@ -28,4 +29,20 @@ func getListCert(conn net.Conn) {
 	}
 	conn.Write([]byte(fileINFO))
 
+}
+func createCert(conn net.Conn) {
+	errmk := os.Mkdir(CERT+"/"+Uname, 0777)
+	if errmk != nil {
+		fmt.Println("Cert was created")
+		conn.Write([]byte("0"))
+
+	}
+	file, err := os.Create(CERT + "/" + Uname + "/" + "main.crt")
+	if err != nil {
+		fmt.Println("Unable to create file:", err)
+		os.Exit(1)
+	}
+	defer file.Close()
+	fmt.Println(file.Name())
+	conn.Write([]byte("1"))
 }

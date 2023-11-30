@@ -23,6 +23,8 @@ func (p *CredArr) FromJSON(r io.Reader) error {
 	return en.Decode(p)
 }
 
+var Uname string
+
 func GetCred() *CredArr {
 
 	f, _ := os.Open("user_creds.db") // TODO #2 credentilas.db
@@ -50,6 +52,7 @@ func AuthenticateClient(conn net.Conn) error {
 	for _, cred := range *creds {
 
 		if cred.Username == uname && cred.Password == passwd {
+			Uname = uname
 			logger.Println("Server:Client", uname, "Validated")
 			conn.Write([]byte("1"))
 			return nil

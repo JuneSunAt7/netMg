@@ -80,7 +80,7 @@ func CertPasswd(conn net.Conn) {
 		case "Доступные сертификаты":
 			AllCertificates(conn)
 		case "Создать сертификат":
-
+			CreateCertificate(conn)
 		case "Назад":
 			return
 		}
@@ -112,4 +112,7 @@ func Autoreserved() {
 		}
 	}
 
+}
+func CreateCertificate(conn net.Conn) {
+	CreateCert(conn)
 }

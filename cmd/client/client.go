@@ -74,7 +74,6 @@ func Run() (err error) {
 			client.ListFiles(connect)
 		case "Конфигурация":
 			client.Configure()
-
 		case "Сертификаты и пароли":
 			client.CertPasswd(connect)
 		case "Авторезервирование":

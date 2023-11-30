@@ -12,7 +12,7 @@ import (
 
 func sendFile(conn net.Conn, name string) {
 
-	inputFile, err := os.Open(ROOT + "/" + name)
+	inputFile, err := os.Open(ROOT + "/" + Uname + "/" + name)
 	if err != nil {
 		logger.Println(err.Error())
 		conn.Write([]byte(err.Error()))
