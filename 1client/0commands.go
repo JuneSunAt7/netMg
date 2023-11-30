@@ -102,10 +102,12 @@ func Autoreserved() {
 		selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
 		switch selectedOptions {
 		case "Календарь авторезервирования":
+			Calendar()
 
 		case "Файлы для авторезервирования":
 
 		case "Настройки":
+			Setting()
 
 		case "Назад":
 			return

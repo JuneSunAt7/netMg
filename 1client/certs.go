@@ -9,7 +9,7 @@ import (
 )
 
 func AllCertificates(conn net.Conn) {
-	pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgBlue)).Println("Все сертификаты\n")
+	pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgBlue)).Println("Все сертификаты")
 
 	conn.Write([]byte("certs\n")) // Bind with server
 	buffer := make([]byte, 4096)
