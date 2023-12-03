@@ -105,5 +105,5 @@ func createSettingsFile(days []string) {
 
 }
 func Containers() {
-
+	//TODO #7 Use analog zip containers and write to settings paths
 }
