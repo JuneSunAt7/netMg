@@ -3,7 +3,9 @@ package client
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/pterm/pterm"
@@ -30,12 +32,42 @@ func Calendar() {
 
 	}
 }
-func changeDir() {
 
-}
 func Userfiles() {
 
-	// TODO #5 Add change directory
+	pterm.DefaultHeader.WithFullWidth().WithBackgroundStyle(pterm.NewStyle(pterm.BgLightBlue)).
+		WithTextStyle(pterm.NewStyle(pterm.FgBlack)).Println("Доступные директории:")
+
+	var options []string
+	maindir, _ := pterm.DefaultInteractiveTextInput.Show("Директория на устройстве(полный путь до папки или диска)")
+
+	files, err := ioutil.ReadDir(maindir)
+	if err != nil {
+		pterm.FgRed.Println("Ошибка чтения директорий и файлов!")
+	}
+
+	for _, file := range files {
+		absPath, err := filepath.Abs(maindir + file.Name())
+		if err != nil {
+			pterm.FgRed.Println("Ошибка прочтения пути к файлу!")
+		}
+		options = append(options, fmt.Sprint(absPath+"\n"))
+
+	}
+
+	selectedOptions, _ := pterm.DefaultInteractiveMultiselect.WithOptions(options).Show()
+	pterm.Info.Printfln("Выбранные файлы для резервирования: %s", pterm.Green(selectedOptions))
+	updateSettings(selectedOptions)
+}
+
+func updateSettings(files []string) {
+	// Write path selected files
+	outputFile, err := os.Create(ROOT + "/" + "localSettings" + "/" + "path.ini")
+	if err != nil {
+		pterm.FgRed.Printfln("Ошибка создания локального файла!")
+	}
+	defer outputFile.Close()
+	outputFile.WriteString(strings.Join(files, " "))
 }
 func Setting() {
 

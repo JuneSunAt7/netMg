@@ -108,7 +108,6 @@ func Autoreserved() {
 			Userfiles()
 		case "Контейнеры":
 			Containers()
-
 		case "Настройки":
 			Setting()
 
@@ -120,4 +119,8 @@ func Autoreserved() {
 }
 func CreateCertificate(conn net.Conn) {
 	CreateCert(conn)
+}
+func CheckDate() {
+	// Check date for reserving
+
 }
