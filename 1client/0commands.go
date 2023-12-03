@@ -92,6 +92,7 @@ func Autoreserved() {
 
 	options = append(options, fmt.Sprintf("Календарь авторезервирования"))
 	options = append(options, fmt.Sprintf("Файлы для авторезервирования"))
+	options = append(options, fmt.Sprintf("Контейнеры"))
 	options = append(options, fmt.Sprintf("Настройки"))
 	options = append(options, fmt.Sprintf("Назад"))
 
@@ -103,8 +104,10 @@ func Autoreserved() {
 		switch selectedOptions {
 		case "Календарь авторезервирования":
 			Calendar()
-
 		case "Файлы для авторезервирования":
+			Userfiles()
+		case "Контейнеры":
+			Containers()
 
 		case "Настройки":
 			Setting()

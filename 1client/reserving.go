@@ -30,7 +30,10 @@ func Calendar() {
 
 	}
 }
-func userfiles() {
+func changeDir() {
+
+}
+func Userfiles() {
 
 	// TODO #5 Add change directory
 }
@@ -67,5 +70,8 @@ func createSettingsFile(days []string) {
 	}
 	defer outputFile.Close()
 	outputFile.WriteString(strings.Join(days, " "))
+
+}
+func Containers() {
 
 }
