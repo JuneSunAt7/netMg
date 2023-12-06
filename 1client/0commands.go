@@ -12,13 +12,12 @@ import (
 
 var ROOT = "filestore/clientDir"
 
-// dynamic root dir
 func init() {
 	ROOT, _ = filepath.Abs("filestore/storeclient")
 }
 
 func Upload(conn net.Conn) {
-	fname, _ := pterm.DefaultInteractiveTextInput.Show("Имя файла")
+	fname, _ := pterm.DefaultInteractiveTextInput.Show("Путь до файла")
 	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль для файла")
 
 	p, _ := pterm.DefaultProgressbar.WithTotal(10).WithTitle("...Загрузка...").Start()

@@ -15,7 +15,7 @@ func sendFile(conn net.Conn, fname string, myFPass string) {
 	// That function use module crypto aka AES & MD5 hasing.
 	//The server must make sure that the file is encrypted without errors.
 
-	content, err := ioutil.ReadFile(ROOT + "/" + fname)
+	content, err := ioutil.ReadFile(fname)
 	if err != nil {
 		log.Println(err)
 		return
@@ -52,5 +52,5 @@ func sendFile(conn net.Conn, fname string, myFPass string) {
 	}
 	log.Println(strings.Trim(string(buf[:n]), "\n"))
 
-	checkFileMD5Hash(ROOT + "/" + fname)
+	checkFileMD5Hash(fname)
 }
