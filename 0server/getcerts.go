@@ -1,13 +1,67 @@
 package server
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"crypto/x509/pkix"
+	"encoding/pem"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"math/big"
 	"net"
 	"os"
+	"time"
 
 	"github.com/JuneSunAt7/netMg/logger"
 )
+
+func dataCert(conn net.Conn) {
+	ca := &x509.Certificate{
+		SerialNumber: big.NewInt(1653),
+		Subject: pkix.Name{
+			Organization:  []string{"ORGANIZATION_NAME"},
+			Country:       []string{"COUNTRY_CODE"},
+			Province:      []string{"PROVINCE"},
+			Locality:      []string{"CITY"},
+			StreetAddress: []string{"ADDRESS"},
+			PostalCode:    []string{"POSTAL_CODE"},
+		},
+		NotBefore:             time.Now(),
+		NotAfter:              time.Now().AddDate(10, 0, 0),
+		IsCA:                  true,
+		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth, x509.ExtKeyUsageServerAuth},
+		KeyUsage:              x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
+		BasicConstraintsValid: true,
+	}
+	priv, _ := rsa.GenerateKey(rand.Reader, 2048)
+	pub := &priv.PublicKey
+	ca_b, err := x509.CreateCertificate(rand.Reader, ca, ca, pub, priv)
+	if err != nil {
+		log.Println("create ca failed", err)
+		return
+	}
+
+	// Public key
+	certOut, err := os.Create(CERT + "/" + Uname + "/" + Uname + ".crt")
+	pem.Encode(certOut, &pem.Block{Type: "CERTIFICATE", Bytes: ca_b})
+	certOut.Close()
+
+	if err != nil {
+		fmt.Println("Unable to create file:", err)
+		os.Exit(1)
+	}
+
+	defer certOut.Close()
+	fmt.Println(certOut.Name())
+	conn.Write([]byte("1"))
+
+	// Private key
+	keyOut, err := os.OpenFile(CERT+"/"+Uname+"/"+Uname+".key", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	pem.Encode(keyOut, &pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(priv)})
+	keyOut.Close()
+}
 
 func getListCert(conn net.Conn) {
 	// This function is similar to the function for getting a list of files.
@@ -29,20 +83,4 @@ func getListCert(conn net.Conn) {
 	}
 	conn.Write([]byte(fileINFO))
 
-}
-func createCert(conn net.Conn) {
-	errmk := os.Mkdir(CERT+"/"+Uname, 0777)
-	if errmk != nil {
-		fmt.Println("Cert was created")
-		conn.Write([]byte("0"))
-
-	}
-	file, err := os.Create(CERT + "/" + Uname + "/" + "main.crt")
-	if err != nil {
-		fmt.Println("Unable to create file:", err)
-		os.Exit(1)
-	}
-	defer file.Close()
-	fmt.Println(file.Name())
-	conn.Write([]byte("1"))
 }

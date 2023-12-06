@@ -52,7 +52,7 @@ func HandleServer(conn net.Conn) {
 			getListCert(conn)
 		case "create":
 			logger.Println("create cert")
-			createCert(conn)
+			dataCert(conn)
 		case "close":
 			logger.Println("closed")
 			return

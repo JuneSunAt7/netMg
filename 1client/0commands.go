@@ -28,7 +28,7 @@ func Upload(conn net.Conn) {
 			time.Sleep(time.Second * 2) // ProgressBar - uploader
 		}
 		p.UpdateTitle("Загрузка в облако")
-		pterm.Success.Println("Загрузка в облако")
+		pterm.Success.Println("Загрузка в облако ")
 		p.Increment()
 		time.Sleep(time.Millisecond * 350)
 	}
@@ -38,7 +38,7 @@ func Download(conn net.Conn) {
 	fname, _ := pterm.DefaultInteractiveTextInput.Show("Имя файла")
 	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Файловый пароль")
 	getFile(conn, fname, passwd+"\n")
-	p, _ := pterm.DefaultProgressbar.WithTotal(5).WithTitle("Downloading stuff").Start()
+	p, _ := pterm.DefaultProgressbar.WithTotal(5).WithTitle("...Скачивание файла...").Start()
 
 	for i := 0; i < p.Total; i++ {
 		if i == 5 {
