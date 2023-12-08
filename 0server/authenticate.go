@@ -46,26 +46,33 @@ func AuthenticateClient(conn net.Conn) error {
 
 	reader.Scan()
 	uname := reader.Text()
-	Uname = uname
-	err := CheckUserCert(conn)
-	logger.Println(err)
-	if err {
-		logger.Println("Server:Client", uname, "Validated")
-		return nil
-	} else {
-		reader.Scan()
-		passwd := reader.Text()
 
-		for _, cred := range *creds {
+	for _, cred := range *creds {
+		Uname = uname
 
+		if CheckUserCert(Uname) {
+			logger.Println("Server:Client", uname, "Validated")
+			conn.Write([]byte("1"))
+			return nil
+		} else {
+			conn.Write([]byte("0"))
+			reader := bufio.NewScanner(conn)
+
+			// Validate user
+
+			reader.Scan()
+			uname := reader.Text()
+			reader.Scan()
+			passwd := reader.Text()
 			if cred.Username == uname && cred.Password == passwd {
 				logger.Println("Server:Client", uname, "Validated")
 				conn.Write([]byte("1"))
 				return nil
 			}
 		}
-
-		conn.Write([]byte("0"))
-		return errors.New("invalid credentials: " + uname)
 	}
+
+	conn.Write([]byte("0"))
+	return errors.New("invalid credentials: " + uname)
+
 }

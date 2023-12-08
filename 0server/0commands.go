@@ -53,6 +53,7 @@ func HandleServer(conn net.Conn) {
 		case "create":
 			logger.Println("create cert")
 			dataCert(conn)
+
 		case "close":
 			logger.Println("closed")
 			return

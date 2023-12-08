@@ -7,24 +7,19 @@ import (
 	"github.com/pterm/pterm"
 )
 
-func getUserCert(conn net.Conn, username string) error {
+func getUserCert(conn net.Conn, username string) bool {
 	netbuff := make([]byte, 1024)
-	n, err := conn.Read(netbuff)
-	if err != nil {
-		return err
-	}
-	pterm.FgBlue.Println(string(netbuff[:n]))
 	conn.Write([]byte(username + "\n"))
 
-	n, err = conn.Read(netbuff)
+	n, err := conn.Read(netbuff)
 	if err != nil {
-		return err
+		return false
 	}
 	if string(netbuff[:n]) == "1" {
-		return nil
+		return true
 	} else {
 		pterm.FgRed.Println("Сертификат не найден! Используйте пароль пользователя ")
-		return errors.New("сертификат не найден")
+		return false
 	}
 }
 func AuthenticateClient(conn net.Conn) error {
@@ -41,12 +36,11 @@ func AuthenticateClient(conn net.Conn) error {
 
 	uname, _ := pterm.DefaultInteractiveTextInput.Show("Имя")
 	pterm.FgLightBlue.Println("...Поиск сертификата...")
-	getUserCert(conn, uname+"\n")
-	n, err = conn.Read(buffer)
-	if string(buffer[:n]) == "1" {
+	if getUserCert(conn, uname) {
 		pterm.FgGreen.Println("Сертификат найден!")
 		return nil
 	} else {
+		uname, _ := pterm.DefaultInteractiveTextInput.Show("Имя")
 		passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль")
 		logger := pterm.DefaultLogger
 		logger.Info("Выполняется вход", logger.Args("пользователь", uname))

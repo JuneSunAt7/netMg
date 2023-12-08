@@ -88,18 +88,22 @@ func getListCert(conn net.Conn) {
 	conn.Write([]byte(fileINFO))
 
 }
-func CheckUserCert(conn net.Conn) bool {
-	certUserPath := CERT + "/" + Uname + "/" + Uname + ".crt"
+func CheckUserCert(uname string) bool {
+	logger.Println(uname)
+	certUserPath := CERT + "/" + uname + "/" + uname + ".crt"
+	logger.Println(certUserPath)
 
 	if _, err := os.Stat(certUserPath); err != nil {
 		if os.IsNotExist(err) {
-			conn.Write([]byte("0"))
+			fmt.Println("f error")
+			fmt.Println(err)
 			return false
 		} else {
+			fmt.Println("sec err")
+			fmt.Println(err)
 			return false
 		}
 	} else {
-		conn.Write([]byte("1"))
 		return true
 	}
 }
