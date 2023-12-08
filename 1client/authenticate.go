@@ -14,7 +14,7 @@ func getUserCert(conn net.Conn, username string) error {
 		return err
 	}
 	pterm.FgBlue.Println(string(netbuff[:n]))
-	conn.Write([]byte("checkcert" + "\n" + username + "\n"))
+	conn.Write([]byte(username + "\n"))
 
 	n, err = conn.Read(netbuff)
 	if err != nil {
@@ -41,9 +41,9 @@ func AuthenticateClient(conn net.Conn) error {
 
 	uname, _ := pterm.DefaultInteractiveTextInput.Show("Имя")
 	pterm.FgLightBlue.Println("...Поиск сертификата...")
-	findErr := getUserCert(conn, uname)
-
-	if findErr == nil {
+	getUserCert(conn, uname+"\n")
+	n, err = conn.Read(buffer)
+	if string(buffer[:n]) == "1" {
 		pterm.FgGreen.Println("Сертификат найден!")
 		return nil
 	} else {

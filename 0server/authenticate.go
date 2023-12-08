@@ -11,7 +11,7 @@ import (
 	"github.com/JuneSunAt7/netMg/logger"
 )
 
-type Credentials struct { // TODO #1 use database file
+type Credentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
@@ -46,20 +46,26 @@ func AuthenticateClient(conn net.Conn) error {
 
 	reader.Scan()
 	uname := reader.Text()
-	reader.Scan()
-	passwd := reader.Text()
+	Uname = uname
+	err := CheckUserCert(conn)
+	logger.Println(err)
+	if err {
+		logger.Println("Server:Client", uname, "Validated")
+		return nil
+	} else {
+		reader.Scan()
+		passwd := reader.Text()
 
-	for _, cred := range *creds {
+		for _, cred := range *creds {
 
-		if cred.Username == uname && cred.Password == passwd {
-			Uname = uname
-			logger.Println("Server:Client", uname, "Validated")
-			conn.Write([]byte("1"))
-			return nil
+			if cred.Username == uname && cred.Password == passwd {
+				logger.Println("Server:Client", uname, "Validated")
+				conn.Write([]byte("1"))
+				return nil
+			}
 		}
+
+		conn.Write([]byte("0"))
+		return errors.New("invalid credentials: " + uname)
 	}
-
-	conn.Write([]byte("0"))
-	return errors.New("invalid credentials: " + uname)
-
 }
