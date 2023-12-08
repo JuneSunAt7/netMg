@@ -18,6 +18,7 @@ import (
 )
 
 func dataCert(conn net.Conn) {
+	// TODO #10 use passwd for create key or cert
 	ca := &x509.Certificate{
 		SerialNumber: big.NewInt(1653),
 		Subject: pkix.Name{
@@ -40,6 +41,7 @@ func dataCert(conn net.Conn) {
 	ca_b, err := x509.CreateCertificate(rand.Reader, ca, ca, pub, priv)
 	if err != nil {
 		log.Println("create ca failed", err)
+		conn.Write([]byte("Невозможно создать ключ"))
 		return
 	}
 
@@ -59,7 +61,11 @@ func dataCert(conn net.Conn) {
 
 	// Private key
 	keyOut, err := os.OpenFile(CERT+"/"+Uname+"/"+Uname+".key", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+
 	pem.Encode(keyOut, &pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(priv)})
+	if err != nil {
+		logger.Println("FAILED CREATE CERTIFICATE FOR" + Uname)
+	}
 	keyOut.Close()
 }
 
@@ -79,7 +85,6 @@ func getListCert(conn net.Conn) {
 				file.Name(),
 				file.ModTime().Format("2006-01-02 15:04:05"))
 		}
-
 	}
 	conn.Write([]byte(fileINFO))
 

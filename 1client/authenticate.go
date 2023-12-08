@@ -4,10 +4,29 @@ import (
 	"errors"
 	"net"
 
-	"github.com/fatih/color"
 	"github.com/pterm/pterm"
 )
 
+func getUserCert(conn net.Conn, username string) error {
+	netbuff := make([]byte, 1024)
+	n, err := conn.Read(netbuff)
+	if err != nil {
+		return err
+	}
+	pterm.FgBlue.Println(string(netbuff[:n]))
+	conn.Write([]byte("checkcert" + "\n" + username + "\n"))
+
+	n, err = conn.Read(netbuff)
+	if err != nil {
+		return err
+	}
+	if string(netbuff[:n]) == "1" {
+		return nil
+	} else {
+		pterm.FgRed.Println("Сертификат не найден! Используйте пароль пользователя ")
+		return errors.New("Сертификат не найден")
+	}
+}
 func AuthenticateClient(conn net.Conn) error {
 
 	buffer := make([]byte, 1024)
@@ -21,20 +40,28 @@ func AuthenticateClient(conn net.Conn) error {
 		WithTextStyle(pterm.NewStyle(pterm.FgBlack)).Println("Аутенфикация")
 
 	uname, _ := pterm.DefaultInteractiveTextInput.Show("Имя")
-	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль")
-	logger := pterm.DefaultLogger
-	logger.Info("Выполняется вход", logger.Args("пользователь", uname))
-	conn.Write([]byte(uname + "\n" + passwd + "\n"))
+	pterm.FgLightBlue.Println("...Поиск сертификата...")
+	findErr := getUserCert(conn, uname)
 
-	n, err = conn.Read(buffer)
-	if err != nil {
-		return err
-	}
-
-	if string(buffer[:n]) == "1" {
+	if findErr == nil {
+		pterm.FgGreen.Println("Сертификат найден!")
 		return nil
 	} else {
-		color.Red("Неверный логин или пароль ")
-		return errors.New("неверный логин или пароль ")
+		passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль")
+		logger := pterm.DefaultLogger
+		logger.Info("Выполняется вход", logger.Args("пользователь", uname))
+		conn.Write([]byte(uname + "\n" + passwd + "\n"))
+
+		n, err = conn.Read(buffer)
+		if err != nil {
+			return err
+		}
+
+		if string(buffer[:n]) == "1" {
+			return nil
+		} else {
+			pterm.FgRed.Println("Неверный логин или пароль ")
+			return errors.New("неверный логин или пароль ")
+		}
 	}
 }
