@@ -18,7 +18,6 @@ import (
 )
 
 func dataCert(conn net.Conn) {
-	// TODO #10 use passwd for create key or cert
 	ca := &x509.Certificate{
 		SerialNumber: big.NewInt(1653),
 		Subject: pkix.Name{
@@ -88,4 +87,17 @@ func getListCert(conn net.Conn) {
 	}
 	conn.Write([]byte(fileINFO))
 
+}
+func CheckUserCert(conn net.Conn) {
+	certUserPath := CERT + "/" + Uname + "/" + Uname + ".crt"
+
+	if _, err := os.Stat(certUserPath); err != nil {
+		if os.IsNotExist(err) {
+			conn.Write([]byte("0"))
+		} else {
+			return
+		}
+	} else {
+		conn.Write([]byte("1"))
+	}
 }

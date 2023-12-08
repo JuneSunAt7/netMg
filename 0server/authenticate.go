@@ -27,7 +27,7 @@ var Uname string
 
 func GetCred() *CredArr {
 
-	f, _ := os.Open("user_creds.db") // TODO #2 credentilas.db
+	f, _ := os.Open("user_creds.db")
 	var creds CredArr
 	creds.FromJSON(f)
 	return &creds

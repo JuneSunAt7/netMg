@@ -24,7 +24,7 @@ func getUserCert(conn net.Conn, username string) error {
 		return nil
 	} else {
 		pterm.FgRed.Println("Сертификат не найден! Используйте пароль пользователя ")
-		return errors.New("Сертификат не найден")
+		return errors.New("сертификат не найден")
 	}
 }
 func AuthenticateClient(conn net.Conn) error {
