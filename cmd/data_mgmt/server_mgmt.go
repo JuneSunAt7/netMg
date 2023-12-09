@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"atomicgo.dev/keyboard/keys"
-	client "github.com/JuneSunAt7/netMg/1client"
+	mgmt "github.com/JuneSunAt7/netMg/server_mgmt"
 	"github.com/pterm/pterm"
 )
 
@@ -27,16 +27,20 @@ func TuiCommands() {
 
 		switch selectedOptions {
 		case "Добавить пользователя":
-			client.Upload(connect)
+			mgmt.AddUser()
 		case "Удалить пользователя":
-			client.Download(connect)
+			mgmt.DelUser()
 		case "Данные о пользователях":
-			client.ListFiles(connect)
+			mgmt.UserData()
 		case "Конфигурация":
-			client.Configure()
+			mgmt.ConfigUser()
 		case "Выход":
 			return
 		}
 	}
 
+}
+
+func main() {
+	TuiCommands()
 }

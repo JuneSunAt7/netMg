@@ -59,11 +59,12 @@ func AuthenticateClient(conn net.Conn) error {
 			reader := bufio.NewScanner(conn)
 
 			// Validate user
-
+			// TODO #11 fix validate user3 pass3
 			reader.Scan()
 			uname := reader.Text()
 			reader.Scan()
 			passwd := reader.Text()
+
 			if cred.Username == uname && cred.Password == passwd {
 				logger.Println("Server:Client", uname, "Validated")
 				conn.Write([]byte("1"))
