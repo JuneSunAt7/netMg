@@ -3,9 +3,12 @@ package client
 import (
 	"errors"
 	"net"
+	"regexp"
 
 	"github.com/pterm/pterm"
 )
+
+var IsLetter = regexp.MustCompile(`1`).MatchString
 
 func getUserCert(conn net.Conn, username string) bool {
 	netbuff := make([]byte, 1024)
@@ -13,14 +16,18 @@ func getUserCert(conn net.Conn, username string) bool {
 
 	n, err := conn.Read(netbuff)
 	if err != nil {
+
 		return false
 	}
 	if string(netbuff[:n]) == "1" {
+
 		return true
 	} else {
 		pterm.FgRed.Println("Сертификат не найден! Используйте пароль пользователя ")
+
 		return false
 	}
+
 }
 func AuthenticateClient(conn net.Conn) error {
 
@@ -40,18 +47,18 @@ func AuthenticateClient(conn net.Conn) error {
 		pterm.FgGreen.Println("Сертификат найден!")
 		return nil
 	} else {
-		uname, _ := pterm.DefaultInteractiveTextInput.Show("Имя")
+
 		passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль")
 		logger := pterm.DefaultLogger
 		logger.Info("Выполняется вход", logger.Args("пользователь", uname))
-		conn.Write([]byte(uname + "\n" + passwd + "\n"))
+		conn.Write([]byte(passwd + "\n"))
 
 		n, err = conn.Read(buffer)
 		if err != nil {
 			return err
 		}
 
-		if string(buffer[:n]) == "1" {
+		if IsLetter(string(buffer[:n])) {
 			return nil
 		} else {
 			pterm.FgRed.Println("Неверный логин или пароль ")

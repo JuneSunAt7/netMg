@@ -3,7 +3,10 @@ package servermgmt
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+
+	"os"
+
+	"io/fs"
 
 	"github.com/pterm/pterm"
 )
@@ -18,7 +21,7 @@ func AddUser() {
 	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль")
 
 	filename := "user_creds.db"
-	file, err := ioutil.ReadFile(filename)
+	file, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -41,7 +44,7 @@ func AddUser() {
 		fmt.Println(err)
 	}
 
-	err = ioutil.WriteFile(filename, dataBytes, 0644)
+	err = os.WriteFile(filename, dataBytes, fs.FileMode(0644))
 	if err != nil {
 		fmt.Println(err)
 	}

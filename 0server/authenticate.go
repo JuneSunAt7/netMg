@@ -25,55 +25,64 @@ func (p *CredArr) FromJSON(r io.Reader) error {
 
 var Uname string
 
-func GetCred() *CredArr {
-
-	f, _ := os.Open("user_creds.db")
+func GetCred() (*CredArr, error) {
+	f, err := os.Open("user_creds.db")
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
 	var creds CredArr
-	creds.FromJSON(f)
-	return &creds
-}
+	err = creds.FromJSON(f)
+	if err != nil {
+		return nil, err
+	}
 
+	return &creds, nil
+}
 func AuthenticateClient(conn net.Conn) error {
 
-	creds := GetCred()
+	creds, err := GetCred()
+	if err != nil {
+		return err
+	}
+	logger.Println(len(*creds))
 	if len(*creds) == 0 {
 		return errors.New("no credentials: ")
 	}
-
 	reader := bufio.NewScanner(conn)
 
 	// Validate user
 
 	reader.Scan()
 	uname := reader.Text()
+	Uname = uname
 
-	for _, cred := range *creds {
-		Uname = uname
+	if CheckUserCert(Uname) {
+		logger.Println("Server:Client", uname, "Validated")
+		conn.Write([]byte("1"))
+		return nil
+	} else {
+		conn.Write([]byte("0"))
 
-		if CheckUserCert(Uname) {
-			logger.Println("Server:Client", uname, "Validated")
-			conn.Write([]byte("1"))
-			return nil
-		} else {
-			conn.Write([]byte("0"))
-			reader := bufio.NewScanner(conn)
+		//reader = bufio.NewScanner(conn)
 
-			// Validate user
-			// TODO #11 fix validate user3 pass3
-			reader.Scan()
-			uname := reader.Text()
-			reader.Scan()
-			passwd := reader.Text()
+		reader.Scan()
+
+		passwd := reader.Text()
+		for _, cred := range *creds {
+			logger.Println(uname)
+			logger.Println(passwd)
+			logger.Println("====")
+			logger.Println(cred.Username)
+			logger.Println(cred.Password)
 
 			if cred.Username == uname && cred.Password == passwd {
-				logger.Println("Server:Client", uname, "Validated")
+				logger.Println("Server:Client ", uname, " Correct ", "passwd ", passwd)
 				conn.Write([]byte("1"))
 				return nil
 			}
 		}
 	}
-
 	conn.Write([]byte("0"))
-	return errors.New("invalid credentials: " + uname)
-
+	return nil
 }
