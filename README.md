@@ -1,5 +1,5 @@
 <h1 allign=center> Репозиторий исходного кода приложения RainDrops</h1>
-
+<img src = "https://github.com/JuneSunAt7/netMg/assets/63651740/96a8d720-268d-4f14-a0de-2b0244550ec7" </img>
 <h2 allign=right>Функции:</h2>
 <p>Хранение и защита файлов</p>
 <p>Доступ к файлам в ЛС</p>
