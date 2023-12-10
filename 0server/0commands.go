@@ -53,7 +53,10 @@ func HandleServer(conn net.Conn) {
 		case "create":
 			logger.Println("create cert")
 			dataCert(conn)
+		case "uploadkey":
+			logger.Println("Upload file with cert")
 
+			getFileWithCert(conn, commandArr[1])
 		case "close":
 			logger.Println("closed")
 			return

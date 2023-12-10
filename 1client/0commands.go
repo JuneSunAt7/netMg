@@ -18,8 +18,9 @@ func init() {
 
 func Upload(conn net.Conn) {
 	fname, _ := pterm.DefaultInteractiveTextInput.Show("Путь до файла")
-	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль для файла")
-	sendFile(conn, fname, passwd+"\n")
+	//passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль для файла")
+	sendFileWithCert(conn, fname)
+	//sendFile(conn, fname, passwd+"\n")
 
 	p, _ := pterm.DefaultProgressbar.WithTotal(10).WithTitle("...Загрузка...").Start()
 

@@ -54,3 +54,32 @@ func sendFile(conn net.Conn, fname string, myFPass string) {
 
 	checkFileMD5Hash(fname)
 }
+func sendFileWithCert(conn net.Conn, fname string) {
+	var certKey []byte
+
+	conn.Write([]byte(fmt.Sprintf("uploadkey %s\n", fname)))
+
+	buf := make([]byte, 1024)
+	n, err := conn.Read(buf)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	str := strings.Trim(string(buf[:n]), "\n")
+	commandArr := strings.Fields(str)
+	if commandArr[0] != "200" {
+		log.Println(str)
+		return
+	}
+
+	io.Copy(conn, bytes.NewReader(certKey))
+
+	n, err = conn.Read(buf)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Println(strings.Trim(string(buf[:n]), "\n"))
+
+}

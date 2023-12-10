@@ -64,18 +64,10 @@ func AuthenticateClient(conn net.Conn) error {
 	} else {
 		conn.Write([]byte("0"))
 
-		//reader = bufio.NewScanner(conn)
-
 		reader.Scan()
 
 		passwd := reader.Text()
 		for _, cred := range *creds {
-			logger.Println(uname)
-			logger.Println(passwd)
-			logger.Println("====")
-			logger.Println(cred.Username)
-			logger.Println(cred.Password)
-
 			if cred.Username == uname && cred.Password == passwd {
 				logger.Println("Server:Client ", uname, " Correct ", "passwd ", passwd)
 				conn.Write([]byte("1"))
