@@ -22,7 +22,12 @@ func getFile(conn net.Conn, name1 string, fs string) {
 	name := name1
 	fmt.Println(name)
 
-	outputFile, err := os.Create(ROOT + "/" + name)
+	errmk := os.Mkdir(ROOT+"/"+Uname, 0777)
+	if errmk != nil {
+		fmt.Println("Error create dir")
+	}
+
+	outputFile, err := os.Create(ROOT + "/" + Uname + "/" + name)
 	if err != nil {
 		logger.Println(err.Error())
 		conn.Write([]byte(err.Error()))
@@ -33,7 +38,7 @@ func getFile(conn net.Conn, name1 string, fs string) {
 	conn.Write([]byte("200 Start upload!"))
 
 	//Use buff size 32 bytes
-	io.Copy(outputFile, io.LimitReader(conn, fileSize)) //TODO timeout wating
+	io.Copy(outputFile, io.LimitReader(conn, fileSize))
 
 	logger.Println("Файл  " + name + " загружен в облако")
 	fmt.Fprint(conn, "Файл  "+name+" загружен в облако успешно\n")

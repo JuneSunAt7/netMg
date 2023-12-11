@@ -10,18 +10,17 @@ import (
 	"strings"
 )
 
-func sendFile(conn net.Conn, fname string, myFPass string) {
+func sendFile(conn net.Conn, fname string) {
 
 	// That function use module crypto aka AES & MD5 hasing.
 	//The server must make sure that the file is encrypted without errors.
-
 	content, err := ioutil.ReadFile(ROOT + "/" + fname)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	arrEnc, err := CBCEncrypter(myFPass, content)
+	arrEnc, err := CBCEncrypter(PASSWD, content)
 	if err != nil {
 		log.Println(err)
 		return

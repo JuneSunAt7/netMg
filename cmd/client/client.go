@@ -61,20 +61,22 @@ func Run() (err error) {
 
 	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
 	printer.Filter = false
+	printer.TextStyle.Add(*pterm.NewStyle(pterm.FgBlue))
 	printer.KeyConfirm = keys.Enter
 
 	for {
 		selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
+
 		switch selectedOptions {
 		case "Загрузить файл":
 			client.Upload(connect)
+
 		case "Скачать файл":
 			client.Download(connect)
 		case "Список файлов":
 			client.ListFiles(connect)
 		case "Конфигурация":
 			client.Configure()
-
 		case "Сертификаты и пароли":
 			client.CertPasswd(connect)
 		case "Авторезервирование":

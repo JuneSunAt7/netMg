@@ -15,8 +15,6 @@ const (
 	PORT = "2121"
 )
 
-// tsl
-// освоить документацию
 func run() (err error) {
 
 	var lstnr net.Listener
@@ -54,7 +52,6 @@ func run() (err error) {
 	defer lstnr.Close()
 
 	for {
-		//TODO Add limit queue/dispatcher
 		connection, err := lstnr.Accept()
 		connection.SetDeadline(time.Now().Add(time.Minute * 2))
 		if err != nil {
