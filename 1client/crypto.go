@@ -10,12 +10,12 @@ import (
 	"io"
 	"log"
 	"math"
+
 	"os"
 )
 
 func CBCEncrypter(password string, sl []byte) ([]byte, error) {
-
-	key := md5.Sum([]byte(password))
+	key := md5.Sum([]byte(PASSWD))
 
 	sl16 := make([]byte, int(math.Ceil(float64(len(sl))/aes.BlockSize)*aes.BlockSize)) //%16 bytes
 	copy(sl16, sl)

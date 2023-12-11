@@ -13,14 +13,13 @@ import (
 var ROOT = "filestore/clientDir"
 
 func init() {
-	ROOT, _ = filepath.Abs("filestore/storeclient")
+	ROOT, _ = filepath.Abs("filestore")
+	// TODO #12 fix bug change path
 }
 
 func Upload(conn net.Conn) {
 	fname, _ := pterm.DefaultInteractiveTextInput.Show("Путь до файла")
-	//passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль для файла")
-	sendFileWithCert(conn, fname)
-	//sendFile(conn, fname, passwd+"\n")
+	sendFile(conn, fname+"\n")
 
 	p, _ := pterm.DefaultProgressbar.WithTotal(10).WithTitle("...Загрузка...").Start()
 

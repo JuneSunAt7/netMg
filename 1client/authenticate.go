@@ -2,6 +2,7 @@ package client
 
 import (
 	"errors"
+	"hash/fnv"
 	"net"
 	"regexp"
 
@@ -29,6 +30,17 @@ func getUserCert(conn net.Conn, username string) bool {
 	}
 
 }
+
+var PASSWD string
+var UNAME string
+
+func hash() uint32 {
+
+	h := fnv.New32a()
+	h.Write([]byte(UNAME))
+	return h.Sum32()
+}
+
 func AuthenticateClient(conn net.Conn) error {
 
 	buffer := make([]byte, 1024)
@@ -42,6 +54,7 @@ func AuthenticateClient(conn net.Conn) error {
 		WithTextStyle(pterm.NewStyle(pterm.FgBlack)).Println("Аутенфикация")
 
 	uname, _ := pterm.DefaultInteractiveTextInput.Show("Имя")
+	UNAME = uname
 	pterm.FgLightBlue.Println("...Поиск сертификата...")
 	if getUserCert(conn, uname) {
 		pterm.FgGreen.Println("Сертификат найден!")
@@ -59,6 +72,13 @@ func AuthenticateClient(conn net.Conn) error {
 		}
 
 		if IsLetter(string(buffer[:n])) {
+			PASSWD = passwd
+			if len(PASSWD) == 0 {
+				pterm.FgRed.Println("Ошибка создания криптографического ключа")
+				PASSWD = string(hash())
+				pterm.FgBlue.Println("Сгенерирован секретный ключ " + PASSWD)
+			}
+
 			return nil
 		} else {
 			pterm.FgRed.Println("Неверный логин или пароль ")
