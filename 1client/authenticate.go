@@ -34,6 +34,7 @@ func getUserCert(conn net.Conn, username string) bool {
 var PASSWD string
 var UNAME string
 
+// That variables has a vulns. Fix it
 func hash() uint32 {
 
 	h := fnv.New32a()
