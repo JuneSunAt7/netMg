@@ -48,6 +48,9 @@ func Run() (err error) {
 	if err := client.AuthenticateClient(connect); err != nil {
 		return err
 	}
+	if client.Compare() {
+		pterm.FgLightGreen.Println("Сегодня день резервирования!")
+	}
 
 	var options []string
 

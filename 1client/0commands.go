@@ -10,11 +10,11 @@ import (
 	"github.com/pterm/pterm"
 )
 
-var ROOT = "filestore/clientDir"
+var ROOT = "filestore/storeclient"
 
-// dynamic root dir
+// Dir for local settings
 func init() {
-	ROOT, _ = filepath.Abs("filestore/clientDir")
+	ROOT, _ = filepath.Abs("filestore/storeclient")
 }
 
 func Upload(conn net.Conn) {
