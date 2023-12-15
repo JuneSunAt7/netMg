@@ -45,7 +45,6 @@ func AuthenticateClient(conn net.Conn) error {
 	if err != nil {
 		return err
 	}
-	logger.Println(len(*creds))
 	if len(*creds) == 0 {
 		return errors.New("no credentials: ")
 	}

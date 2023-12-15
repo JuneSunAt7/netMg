@@ -70,7 +70,6 @@ func Run() (err error) {
 		switch selectedOptions {
 		case "Загрузить файл":
 			client.Upload(connect)
-
 		case "Скачать файл":
 			client.Download(connect)
 		case "Список файлов":

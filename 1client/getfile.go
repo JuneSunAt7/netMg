@@ -4,8 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/pterm/pterm"
 
 	"log"
 	"net"
@@ -13,8 +17,10 @@ import (
 )
 
 func getFile(conn net.Conn, fname string, myFPass string) {
+	file := filepath.Base(fname)
+	fmt.Println(file)
 
-	conn.Write([]byte(fmt.Sprintf("download %s\n", fname)))
+	conn.Write([]byte(fmt.Sprintf("download %s\n", file)))
 
 	buffer := make([]byte, 1024)
 	n, _ := conn.Read(buffer)
@@ -39,14 +45,21 @@ func getFile(conn net.Conn, fname string, myFPass string) {
 		return
 	}
 
-	outputFile, err := os.Create(ROOT + "/" + fname)
+	outputFile, err := os.Create(fname)
 	if err != nil {
 		log.Println(err)
 	}
 	io.Copy(outputFile, bytes.NewReader(arrDec))
 	defer outputFile.Close()
+	p, _ := pterm.DefaultProgressbar.WithTotal(5).WithTitle("...Скачивание файла...").Start()
 
-	log.Println("Файл скачан успешно")
+	for i := 0; i < p.Total; i++ {
+		p.UpdateTitle("Выгрузка из облака") // ProgressBar - downloader
+		p.Increment()
+		time.Sleep(time.Millisecond * 350)
+	}
 
-	checkFileMD5Hash(ROOT + "/" + fname)
+	pterm.Success.Println("Успешная выгрузка из облака")
+
+	checkFileMD5Hash(fname)
 }

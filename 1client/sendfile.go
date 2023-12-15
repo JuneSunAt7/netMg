@@ -5,40 +5,50 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net"
+	"path/filepath"
 	"strings"
+	"time"
+
+	"github.com/pterm/pterm"
 )
 
 func sendFile(conn net.Conn, fname string) {
 
 	// That function use module crypto aka AES & MD5 hasing.
 	//The server must make sure that the file is encrypted without errors.
-	content, err := ioutil.ReadFile(ROOT + "/" + fname)
+	file := filepath.Base(fname)
+	content, err := ioutil.ReadFile(fname)
+
 	if err != nil {
-		log.Println(err)
+		pterm.Error.Println("Ошибка при загрузке файла")
+		fmt.Println(err)
 		return
 	}
 
 	arrEnc, err := CBCEncrypter(PASSWD, content)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
+		pterm.Error.Println("Ошибка при загрузке файла")
 		return
 	}
 
-	conn.Write([]byte(fmt.Sprintf("upload %s %d\n", fname, len(arrEnc))))
+	conn.Write([]byte(fmt.Sprintf("upload %s %d\n", file, len(arrEnc))))
 
 	buf := make([]byte, 1024)
 	n, err := conn.Read(buf)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
+
+		pterm.Error.Println("Ошибка при загрузке файла")
 		return
 	}
 
 	str := strings.Trim(string(buf[:n]), "\n")
 	commandArr := strings.Fields(str)
 	if commandArr[0] != "200" {
-		log.Println(str)
+		fmt.Println(err)
+		pterm.Error.Println("Ошибка сетевого взаимодействия файла")
 		return
 	}
 
@@ -46,10 +56,19 @@ func sendFile(conn net.Conn, fname string) {
 
 	n, err = conn.Read(buf)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
+		pterm.Error.Println("Ошибка при загрузке файла")
 		return
 	}
-	log.Println(strings.Trim(string(buf[:n]), "\n"))
+	p, _ := pterm.DefaultProgressbar.WithTotal(10).WithTitle("...Загрузка...").Start()
 
-	checkFileMD5Hash(ROOT + "/" + fname)
+	for i := 0; i < p.Total; i++ {
+		// Progressbae - uploader
+		p.UpdateTitle("Загрузка в облако")
+		p.Increment()
+		time.Sleep(time.Millisecond * 350)
+	}
+	pterm.Success.Println(strings.Trim(string(buf[:n]), "\n"))
+
+	checkFileMD5Hash(fname)
 }

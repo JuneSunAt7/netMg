@@ -7,6 +7,9 @@ toolchain go1.21.4
 require github.com/fatih/color v1.15.0
 
 require (
+	github.com/go-ole/go-ole v1.2.4 // indirect
+	github.com/google/uuid v1.1.1 // indirect
+	github.com/harry1453/go-common-file-dialog v1.2.0 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
 	github.com/nsf/termbox-go v0.0.0-20190121233118-02980233997d // indirect
 )

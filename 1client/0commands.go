@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 	"path/filepath"
-	"time"
+	"strings"
 
 	"atomicgo.dev/keyboard/keys"
 	"github.com/pterm/pterm"
@@ -12,44 +12,22 @@ import (
 
 var ROOT = "filestore/clientDir"
 
+// dynamic root dir
 func init() {
-	ROOT, _ = filepath.Abs("filestore")
-	// TODO #12 fix bug change path
+	ROOT, _ = filepath.Abs("filestore/clientDir")
 }
 
 func Upload(conn net.Conn) {
-	fname, _ := pterm.DefaultInteractiveTextInput.Show("Путь до файла")
-	sendFile(conn, fname+"\n")
-
-	p, _ := pterm.DefaultProgressbar.WithTotal(10).WithTitle("...Загрузка...").Start()
-
-	for i := 0; i < p.Total; i++ {
-		if i == 5 {
-			time.Sleep(time.Second * 2) // ProgressBar - uploader
-		}
-		p.UpdateTitle("Загрузка в облако")
-		pterm.Success.Println("Загрузка в облако ")
-		p.Increment()
-		time.Sleep(time.Millisecond * 350)
-	}
+	fname := ChooseFile()
+	fname = strings.Replace(fname, "\\", "/", -1)
+	fmt.Println(fname)
+	sendFile(conn, fname)
 }
 
 func Download(conn net.Conn) {
 	fname, _ := pterm.DefaultInteractiveTextInput.Show("Имя файла")
-	passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Файловый пароль")
+	passwd := PASSWD
 	getFile(conn, fname, passwd+"\n")
-	p, _ := pterm.DefaultProgressbar.WithTotal(5).WithTitle("...Скачивание файла...").Start()
-
-	for i := 0; i < p.Total; i++ {
-		if i == 5 {
-			time.Sleep(time.Second * 2)
-		}
-		p.UpdateTitle("Выгрузка из облака") // ProgressBar - downloader
-		pterm.Success.Println("Выгрузка из облака")
-		p.Increment()
-		time.Sleep(time.Millisecond * 350)
-	}
-
 }
 
 func ListFiles(conn net.Conn) {
