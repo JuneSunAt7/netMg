@@ -1,6 +1,7 @@
 package client
 
 import (
+	"archive/zip"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -15,7 +16,7 @@ func Calendar() {
 	file, err := os.Open(ROOT + "/" + "localSettings" + "/" + "settings.ini")
 	if err != nil {
 		pterm.FgLightRed.Println("Файл настроек не найден!")
-		os.Exit(1)
+		return
 	}
 	defer file.Close()
 
@@ -105,6 +106,83 @@ func createSettingsFile(days []string) {
 
 }
 func Containers() {
+	// Указываем путь к существующей папке
+	folderPath := ChooseDir()
+	folderName := filepath.Base(folderPath)
 
-	//TODO #7 Use analog zip containers and write to settings paths
+	// Создаем новый zip архив для записи
+	zipFile, err := os.Create(folderName + ".rdct")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer zipFile.Close()
+
+	// Создаем новый zip писатель
+	zipWriter := zip.NewWriter(zipFile)
+	defer zipWriter.Close()
+
+	// Рекурсивно обходим все файлы и подпапки в указанной папке
+	err = filepath.Walk(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
+		p, _ := pterm.DefaultProgressbar.WithTotal(10).WithTitle("...Создание контейнера...").Start()
+
+		for i := 0; i < p.Total; i++ {
+			// Progressbae - uploader
+			p.UpdateTitle("Создание контейнера")
+			p.Increment()
+		}
+
+		if err != nil {
+			return err
+		}
+
+		// Игнорируем директории
+		if fileInfo.IsDir() {
+			return nil
+		}
+
+		// Относительный путь файла внутри папки
+		relativePath := strings.TrimPrefix(filePath, folderPath)
+
+		// Создаем заголовок файла в архиве
+		header, err := zip.FileInfoHeader(fileInfo)
+		if err != nil {
+			return err
+		}
+
+		// Устанавливаем имя файла в архиве
+		header.Name = relativePath
+
+		// Устанавливаем метод сжатия
+		header.Method = zip.Deflate
+
+		// Создаем запись в архиве
+		writer, err := zipWriter.CreateHeader(header)
+		if err != nil {
+			return err
+		}
+
+		// Открываем существующий файл для чтения
+		file, err := os.Open(filePath)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		// Копируем содержимое файла в запись архива
+		_, err = io.Copy(writer, file)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	pterm.Success.Println("Успешная контейнеризация!")
+
 }

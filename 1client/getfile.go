@@ -18,7 +18,6 @@ import (
 
 func getFile(conn net.Conn, fname string, myFPass string) {
 	file := filepath.Base(fname)
-	fmt.Println(file)
 
 	conn.Write([]byte(fmt.Sprintf("download %s\n", file)))
 
