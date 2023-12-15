@@ -18,6 +18,13 @@ const (
 	HOST = "localhost"
 )
 
+func boolToText(b bool, conn net.Conn) string {
+	if b {
+		client.AutoSendFiles(conn)
+		return pterm.Green("Yes")
+	}
+	return pterm.Red("No")
+}
 func Run() (err error) {
 
 	var connect net.Conn
@@ -50,6 +57,9 @@ func Run() (err error) {
 	}
 	if client.Compare() {
 		pterm.FgLightGreen.Println("Сегодня день резервирования!")
+		result, _ := pterm.DefaultInteractiveConfirm.Show("Выполнить сейчас авторезервирование?")
+		pterm.Println() // Blank line
+		pterm.Info.Printfln("Ваш ответ: %s", boolToText(result, connect))
 	}
 
 	var options []string

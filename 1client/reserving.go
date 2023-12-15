@@ -40,8 +40,7 @@ func Userfiles() {
 		WithTextStyle(pterm.NewStyle(pterm.FgBlack)).Println("Доступные директории:")
 
 	var options []string
-	maindir, _ := pterm.DefaultInteractiveTextInput.Show("Директория на устройстве(полный путь до папки или диска)")
-
+	maindir := ChooseDir()
 	files, err := ioutil.ReadDir(maindir)
 	if err != nil {
 		pterm.FgRed.Println("Ошибка чтения директорий и файлов!")
@@ -55,10 +54,8 @@ func Userfiles() {
 		options = append(options, fmt.Sprint(absPath+"\n"))
 
 	}
-
-	selectedOptions, _ := pterm.DefaultInteractiveMultiselect.WithOptions(options).Show()
-	pterm.Info.Printfln("Выбранные файлы для резервирования: %s", pterm.Green(selectedOptions))
-	updateSettings(selectedOptions)
+	updateSettings(options)
+	pterm.Success.Println("Сохранено в настройках")
 }
 
 func updateSettings(files []string) {
@@ -90,23 +87,15 @@ func Setting() {
 }
 
 func createSettingsFile(days []string) {
-	/* errmk := os.Mkdir(ROOT+"/"+"localSettings", 0777)
-	if errmk != nil {
-
-		fmt.Println(errmk)
-		pterm.FgLightRed.Println("Ошибка создания реестра настроек!")
-	} */
-
 	outputFile, err := os.Create(ROOT + "/" + "localSettings" + "/" + "settings.ini")
 	if err != nil {
-		pterm.FgRed.Printfln("Ошибка создания локального файла!")
+		pterm.Error.Printfln("Ошибка создания локального файла!")
 	}
 	defer outputFile.Close()
 	outputFile.WriteString(strings.Join(days, " "))
 
 }
 func Containers() {
-	// Указываем путь к существующей папке
 	folderPath := ChooseDir()
 	folderName := filepath.Base(folderPath)
 

@@ -1,8 +1,10 @@
 package client
 
 import (
+	"bufio"
 	"fmt"
 	"net"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -20,7 +22,6 @@ func init() {
 func Upload(conn net.Conn) {
 	fname := ChooseFile()
 	fname = strings.Replace(fname, "\\", "/", -1)
-	fmt.Println(fname)
 	sendFile(conn, fname)
 }
 
@@ -95,6 +96,21 @@ func Autoreserved() {
 	}
 }
 
-func CheckDate() {
-	// Check date for reserving
+func AutoSendFiles(conn net.Conn) {
+	file, err := os.Open(ROOT + "/" + "localSettings" + "/" + "path.ini")
+	if err != nil {
+		pterm.FgRed.Println("Файлы для резервирования не найдены!")
+		return
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	for j := 0; j < len(lines); j++ {
+		fname := strings.Replace(lines[j], "\\", "/", -1)
+		sendFile(conn, fname)
+	}
 }
