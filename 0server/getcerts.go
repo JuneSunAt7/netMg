@@ -8,13 +8,14 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
-	"log"
+
 	"math/big"
 	"net"
 	"os"
 	"time"
 
 	"github.com/JuneSunAt7/netMg/logger"
+	"github.com/pterm/pterm"
 )
 
 func dataCert(conn net.Conn) {
@@ -39,7 +40,7 @@ func dataCert(conn net.Conn) {
 	pub := &priv.PublicKey
 	ca_b, err := x509.CreateCertificate(rand.Reader, ca, ca, pub, priv)
 	if err != nil {
-		log.Println("create ca failed", err)
+		pterm.Error.Println("Невозможно создать сертификат из-за", err)
 		conn.Write([]byte("Невозможно создать ключ"))
 		return
 	}
@@ -50,11 +51,11 @@ func dataCert(conn net.Conn) {
 	certOut.Close()
 
 	if err != nil {
-		fmt.Println("Unable to create file:", err)
-		os.Exit(1)
+		pterm.Warning.Println("Невозможно создать файл ", err)
 	}
 
 	defer certOut.Close()
+	pterm.Success.Println(certOut.Name())
 	fmt.Println(certOut.Name())
 	conn.Write([]byte("1"))
 

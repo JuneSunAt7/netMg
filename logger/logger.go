@@ -3,11 +3,12 @@ package logger
 import (
 	"log"
 	"os"
+
+	"github.com/pterm/pterm"
 )
 
 var (
 	infoLogger2File *log.Logger
-	infoLogger2T    *log.Logger
 )
 
 func init() {
@@ -24,10 +25,11 @@ func init() {
 	// infoLogger2File = log.New(file, "INFO\t", log.LstdFlags|log.Lshortfile)
 	// infoLogger2T = log.New(os.Stdout, "INFO\t", log.LstdFlags|log.Lshortfile)
 	infoLogger2File = log.New(file, "INFO ", log.LstdFlags) //"INFO\t"
-	infoLogger2T = log.New(os.Stdout, "INFO ", log.LstdFlags)
 }
 
 func Println(v ...interface{}) {
+	/* infoLogger2File.Println(v...)
+	infoLogger2T.Println(v...) */
+	pterm.Info.Println(v...)
 	infoLogger2File.Println(v...)
-	infoLogger2T.Println(v...)
 }

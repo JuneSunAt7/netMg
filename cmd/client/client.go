@@ -25,6 +25,7 @@ func boolToText(b bool, conn net.Conn) string {
 	}
 	return pterm.Red("No")
 }
+
 func Run() (err error) {
 
 	var connect net.Conn

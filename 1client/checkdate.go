@@ -43,7 +43,7 @@ func Compare() bool {
 	for i := 0; i < 7; i++ {
 		for j := 0; j < len(lines); j++ {
 			if days[lines[j]] == todayData() {
-				reserve = true
+				return true
 			} else {
 				reserve = false
 			}

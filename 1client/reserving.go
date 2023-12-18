@@ -92,7 +92,7 @@ func createSettingsFile(days []string) {
 		pterm.Error.Printfln("Ошибка создания локального файла!")
 	}
 	defer outputFile.Close()
-	outputFile.WriteString(strings.Join(days, " "))
+	outputFile.WriteString(strings.Join(days, "\n"))
 
 }
 func Containers() {

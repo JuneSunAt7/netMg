@@ -2,13 +2,15 @@ package server
 
 import (
 	"bufio"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"io"
 	"net"
 	"os"
 
-	"github.com/JuneSunAt7/netMg/logger"
+	"github.com/pterm/pterm"
 )
 
 type Credentials struct {
@@ -57,7 +59,7 @@ func AuthenticateClient(conn net.Conn) error {
 	Uname = uname
 
 	if CheckUserCert(Uname) {
-		logger.Println("Server:Client", uname, "Validated")
+		pterm.Success.Println("Server:Client", uname, "Validated")
 		conn.Write([]byte("1"))
 		return nil
 	} else {
@@ -67,13 +69,16 @@ func AuthenticateClient(conn net.Conn) error {
 
 		passwd := reader.Text()
 		for _, cred := range *creds {
-			if cred.Username == uname && cred.Password == passwd {
-				logger.Println("Server:Client ", uname, " Correct ", "passwd ", passwd)
+			hash := md5.Sum([]byte(cred.Password))
+			strPasswd := hex.EncodeToString(hash[:])
+			if cred.Username == uname && strPasswd == passwd {
+				pterm.Success.Println("Server:Client ", uname, " Correct ", "hashed ", passwd)
 				conn.Write([]byte("1"))
 				return nil
 			}
 		}
 	}
+	pterm.Warning.Println("Ошибка соединения с клиентом")
 	conn.Write([]byte("0"))
 	return nil
 }

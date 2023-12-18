@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/JuneSunAt7/netMg/logger"
+
+	"github.com/pterm/pterm"
 )
 
 var ROOT = "filestore"
@@ -24,7 +26,7 @@ func HandleServer(conn net.Conn) {
 	conn.Write([]byte("Server:Connection Established"))
 
 	if err := AuthenticateClient(conn); err != nil {
-		logger.Println(err.Error())
+		pterm.Error.Println(err.Error())
 		return
 	}
 
@@ -38,26 +40,26 @@ func HandleServer(conn net.Conn) {
 		switch strings.ToLower(commandArr[0]) {
 
 		case "download":
-			logger.Println("Download Request")
+			pterm.BgLightMagenta.Println("Скачивание из облака")
 			sendFile(conn, commandArr[1])
 
 		case "upload":
-			logger.Println("Upload Request")
+			pterm.BgLightMagenta.Println("Загрузка в облако")
 			getFile(conn, commandArr[1], commandArr[2])
 		case "ls":
-			logger.Println("ls")
+			pterm.BgLightMagenta.Println("Получение списка файлов")
 			getListFiles(conn)
 		case "certs":
-			logger.Println("certs")
+			logger.Println("Управление сертификатами")
 			getListCert(conn)
 		case "create":
-			logger.Println("create cert")
+			logger.Println("Создание сертификата")
 			dataCert(conn)
 		case "getkey":
-			logger.Println("Upload file with cert")
+			logger.Println("Управление ключами")
 			sendKey(conn)
 		case "close":
-			logger.Println("closed")
+			pterm.Warning.Println("Закрытие соединения")
 			return
 		}
 	}

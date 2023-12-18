@@ -35,7 +35,6 @@ func getUserCert(conn net.Conn, username string) bool {
 var PASSWD string
 var UNAME string
 
-// That variables has a vulns. Fix it
 func AuthenticateClient(conn net.Conn) error {
 
 	buffer := make([]byte, 1024)
