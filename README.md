@@ -25,8 +25,7 @@
   <li>TLS - сети (опционально)</li>
 </ol>
 <h4>RD's air server</h4>
-<img src= "https://github.com/JuneSunAt7/netMg/assets/63651740/dc7e0280-68fd-4712-83fe-94e9dbb5139e"</img>
-
+<img src= "https://github.com/JuneSunAt7/netMg/assets/63651740/9aef9105-5c01-4552-923a-afe5943e3e07"</img>
 <ol>
   <li>Хранение паролей и сертификатов</li>
   <li>Храниение защищенных файлов</li>
