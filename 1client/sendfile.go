@@ -14,7 +14,6 @@ import (
 )
 
 func sendFile(conn net.Conn, fname string) {
-	// TODO #14 fix bug with upload some files
 	// That function use module crypto aka AES & MD5 hasing.
 	//The server must make sure that the file is encrypted without errors.
 	file := filepath.Base(fname)
