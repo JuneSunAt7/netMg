@@ -47,7 +47,7 @@ func Userfiles() {
 	}
 
 	for _, file := range files {
-		absPath, err := filepath.Abs(maindir + file.Name())
+		absPath, err := filepath.Abs(maindir + "\\" + file.Name())
 		if err != nil {
 			pterm.FgRed.Println("Ошибка прочтения пути к файлу!")
 		}

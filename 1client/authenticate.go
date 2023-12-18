@@ -1,8 +1,9 @@
 package client
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
-	"hash/fnv"
 	"net"
 	"regexp"
 
@@ -35,13 +36,6 @@ var PASSWD string
 var UNAME string
 
 // That variables has a vulns. Fix it
-func hash() uint32 {
-
-	h := fnv.New32a()
-	h.Write([]byte(UNAME))
-	return h.Sum32()
-}
-
 func AuthenticateClient(conn net.Conn) error {
 
 	buffer := make([]byte, 1024)
@@ -65,7 +59,10 @@ func AuthenticateClient(conn net.Conn) error {
 		passwd, _ := pterm.DefaultInteractiveTextInput.WithMask("*").Show("Пароль")
 		logger := pterm.DefaultLogger
 		logger.Info("Выполняется вход", logger.Args("пользователь", uname))
-		conn.Write([]byte(passwd + "\n"))
+
+		hash := md5.Sum([]byte(passwd))
+		strPasswd := hex.EncodeToString(hash[:])
+		conn.Write([]byte(strPasswd + "\n"))
 
 		n, err = conn.Read(buffer)
 		if err != nil {
@@ -76,7 +73,10 @@ func AuthenticateClient(conn net.Conn) error {
 			PASSWD = passwd
 			if len(PASSWD) == 0 {
 				pterm.FgRed.Println("Ошибка создания криптографического ключа")
-				PASSWD = string(hash())
+				hash := md5.Sum([]byte(uname))
+				strPasswd := hex.EncodeToString(hash[:])
+
+				PASSWD = strPasswd
 				pterm.FgBlue.Println("Сгенерирован секретный ключ " + PASSWD)
 			}
 

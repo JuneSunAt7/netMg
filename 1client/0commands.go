@@ -111,6 +111,7 @@ func AutoSendFiles(conn net.Conn) {
 	}
 	for j := 0; j < len(lines); j++ {
 		fname := strings.Replace(lines[j], "\\", "/", -1)
+
 		sendFile(conn, fname)
 	}
 }
