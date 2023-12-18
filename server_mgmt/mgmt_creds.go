@@ -6,7 +6,9 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
+	"net"
 	"os"
+	"path/filepath"
 
 	"atomicgo.dev/keyboard/keys"
 
@@ -81,14 +83,14 @@ func DelUser() {
 		options = append(options, fmt.Sprintf(cred.UserName))
 
 	}
-	options = append(options, fmt.Sprintf("Выход"))
+	options = append(options, fmt.Sprintf("Назад"))
 	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
 	printer.Filter = false
 	printer.TextStyle.Add(*pterm.NewStyle(pterm.FgBlue))
 	printer.KeyConfirm = keys.Enter
 
 	selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
-	if selectedOptions == "Выход" {
+	if selectedOptions == "Назад" {
 		return
 	} else {
 		pterm.Info.Printfln("Выбранный пользователь: %s", pterm.Green(selectedOptions))
@@ -142,8 +144,89 @@ func removeRecord(records []MyStruct, name string) []MyStruct {
 	return updatedRecords
 }
 func UserData() {
+	dirPath := "filestore/"
+	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			dirSize, err := getDirSize(path)
+			if err != nil {
+				return err
+			}
+			bars := []pterm.Bar{
+				{Label: path, Value: int(dirSize)},
+			}
+			pterm.DefaultBarChart.WithBars(bars).WithHorizontal().WithShowValue().Render()
+		}
+		return nil
+	})
 
+	if err != nil {
+		fmt.Println(err)
+	}
+
+}
+func getDirSize(dirPath string) (int64, error) {
+	var size int64
+
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return 0, err
+	}
+
+	for _, file := range files {
+		if !file.IsDir() {
+			size += file.Size()
+		} else {
+			subDirSize, err := getDirSize(filepath.Join(dirPath, file.Name()))
+			if err != nil {
+				return 0, err
+			}
+			size += subDirSize
+		}
+	}
+
+	return size, nil
 }
 func ConfigUser() {
 
+	interfaces, err := net.Interfaces()
+	if err != nil {
+		pterm.Error.Println("Не удалось получить настройки сети")
+		return
+	}
+
+	for _, interf := range interfaces {
+		addrs, err := interf.Addrs()
+		if err != nil {
+			pterm.Error.Println("Ошибка при получении настроек")
+			return
+		}
+		pterm.FgLightBlue.Printf("Сетевой интерфейс: %s\n", interf.Name)
+
+		for _, add := range addrs {
+			if ip, ok := add.(*net.IPNet); ok {
+				pterm.FgGreen.Printf("\tIP: %v\n", ip)
+			}
+		}
+	}
+	port := 2121
+
+	if IsPortOpen(port) {
+		pterm.Warning.Println("Вы не можете установить сервер так как порт 2121 уже используется.")
+
+	} else {
+		pterm.Success.Println("Порт 2121 не используется! Вы можете запусть сервер")
+	}
+
+}
+func IsPortOpen(port int) bool {
+	conn, err := net.Dial("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		return false
+	}
+	defer conn.Close()
+
+	return true
 }
