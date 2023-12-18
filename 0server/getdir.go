@@ -6,15 +6,16 @@ import (
 	"net"
 
 	"github.com/JuneSunAt7/netMg/logger"
+	"github.com/pterm/pterm"
 )
 
 func getListFiles(conn net.Conn) {
 
 	files, err := ioutil.ReadDir(ROOT + "/" + Uname) // Read all filenames from filestore.
 	if err != nil {
-		conn.Write([]byte(err.Error()))
+		pterm.Error.Println("Директория не была создана")
+		conn.Write([]byte("Директория не была создана"))
 		logger.Println(err.Error())
-		return
 	}
 
 	fileINFO := ""

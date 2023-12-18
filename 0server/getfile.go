@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"io"
 	"net"
 	"os"
@@ -22,7 +23,7 @@ func getFile(conn net.Conn, name1 string, fs string) {
 
 	errmk := os.Mkdir(ROOT+"/"+Uname, 0777)
 	if errmk != nil {
-		pterm.Warning.Println("Ошибка создания фпапки")
+		pterm.Warning.Println("Ошибка создания папки")
 	}
 
 	outputFile, err := os.Create(ROOT + "/" + Uname + "/" + name)
@@ -38,5 +39,6 @@ func getFile(conn net.Conn, name1 string, fs string) {
 	//Use buff size 32 bytes
 	io.Copy(outputFile, io.LimitReader(conn, fileSize))
 	pterm.Success.Println("Файл  " + name + " загружен в облако")
+	fmt.Fprint(conn, "Файл  "+name+" загружен в облако успешно\n")
 
 }

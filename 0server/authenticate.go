@@ -41,6 +41,7 @@ func GetCred() (*CredArr, error) {
 
 	return &creds, nil
 }
+
 func AuthenticateClient(conn net.Conn) error {
 
 	creds, err := GetCred()
