@@ -49,7 +49,6 @@ func AddUser() {
 
 	data := []MyStruct{}
 
-	// Here the magic happens!
 	json.Unmarshal(file, &data)
 
 	newStruct := &MyStruct{
@@ -82,57 +81,65 @@ func DelUser() {
 		options = append(options, fmt.Sprintf(cred.UserName))
 
 	}
+	options = append(options, fmt.Sprintf("Выход"))
 	printer := pterm.DefaultInteractiveMultiselect.WithOptions(options)
 	printer.Filter = false
 	printer.TextStyle.Add(*pterm.NewStyle(pterm.FgBlue))
 	printer.KeyConfirm = keys.Enter
 
 	selectedOptions, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
-	pterm.Info.Printfln("Выбранный пользователь: %s", pterm.Green(selectedOptions))
-	delUserinCreds(selectedOptions)
+	if selectedOptions == "Выход" {
+		return
+	} else {
+		pterm.Info.Printfln("Выбранный пользователь: %s", pterm.Green(selectedOptions))
+		delUserinCreds(selectedOptions)
+	}
 
 }
 func delUserinCreds(key string) {
-	// TODO #16 fix function: parse db file
-	file, err := os.OpenFile("user_creds.db", os.O_RDWR, 0644)
+	file, err := os.Open("user_creds.db")
 	if err != nil {
-		pterm.Error.Println("Невозможно открыть файл")
+		pterm.Error.Println("Ошибка при открытии файла")
+		return
 	}
 	defer file.Close()
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
-		pterm.Error.Println("Невозможно прочитать файл")
-
+		pterm.Error.Println("Ошибка при чтении файла")
+		return
 	}
 
-	// Структура для разбора данных JSON
-	yourData := map[string]interface{}{"username": "John", "password": 30}
-	err = json.Unmarshal(data, &yourData)
+	var records []MyStruct
+	err = json.Unmarshal(data, &records)
 	if err != nil {
-		pterm.Error.Println("Невозможно спарсить файл")
+		pterm.Error.Println("Ошибка при парсинге")
+		return
 	}
 
-	// Удаление записи из переменной yourData
-	delete(yourData, key)
+	records = removeRecord(records, key)
 
-	// Запись обновленных данных в файл
-	file, err = os.OpenFile("user_creds.db", os.O_RDWR|os.O_TRUNC, 0644)
+	newData, err := json.MarshalIndent(records, "", "  ")
 	if err != nil {
-		pterm.Error.Println("Невозможно открыть файл для записи")
-	}
-	defer file.Close()
-
-	// Преобразование обновленных данных обратно в JSON и запись в файл
-	newData, err := json.Marshal(yourData)
-	if err != nil {
-		pterm.Error.Println("Невозможно открыть файл")
+		pterm.Error.Println("Ошибка при кодировании данных")
+		return
 	}
 
-	_, err = file.Write(newData)
+	err = ioutil.WriteFile("user_creds.db", newData, 0644)
 	if err != nil {
-		pterm.Error.Println("Невозможно записать в файл")
+		pterm.Error.Println("Ошибка при записи в файл")
+		return
 	}
+	pterm.Success.Println("Пользователь ", key, " успешно удален")
+}
+func removeRecord(records []MyStruct, name string) []MyStruct {
+	var updatedRecords []MyStruct
+	for _, record := range records {
+		if record.UserName != name {
+			updatedRecords = append(updatedRecords, record)
+		}
+	}
+	return updatedRecords
 }
 func UserData() {
 
