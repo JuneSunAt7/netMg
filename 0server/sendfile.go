@@ -7,14 +7,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/JuneSunAt7/netMg/logger"
+	"github.com/pterm/pterm"
 )
 
 func sendFile(conn net.Conn, name string) {
 
 	inputFile, err := os.Open(ROOT + "/" + Uname + "/" + name)
 	if err != nil {
-		logger.Println(err.Error())
+		pterm.Error.Println(err.Error())
 		conn.Write([]byte(err.Error()))
 		return
 	}
@@ -27,25 +27,24 @@ func sendFile(conn net.Conn, name string) {
 	buf := make([]byte, 1024)
 	n, err := conn.Read(buf)
 	if err != nil {
-		logger.Println(err.Error())
+		pterm.Warning.Println(err.Error())
 		return
 	}
 
 	str := strings.Trim(string(buf[:n]), "\n")
 	commandArr := strings.Fields(str)
 	if commandArr[0] != "200" { // Ansver-code 200(succesfully)
-		logger.Println(str)
+		pterm.Warning.Println(str)
 		return
 	}
 
 	io.Copy(conn, inputFile)
-
-	logger.Println("File ", name, " Send successfully")
+	pterm.Success.Println("Файл ", name, " отправлен")
 }
 func sendKey(conn net.Conn) {
 	key, err := os.Open(CERT + "/" + Uname + "/" + Uname + ".crt")
 	if err != nil {
-		logger.Println(err.Error())
+		pterm.Error.Println(err.Error())
 		conn.Write([]byte("Нет ключа шифрования. Создайте его в Сертификаты и пароли"))
 		return
 	}
@@ -58,18 +57,17 @@ func sendKey(conn net.Conn) {
 	buf := make([]byte, 1024)
 	n, err := conn.Read(buf)
 	if err != nil {
-		logger.Println(err.Error())
+		pterm.Error.Println(err.Error())
 		return
 	}
 
 	str := strings.Trim(string(buf[:n]), "\n")
 	commandArr := strings.Fields(str)
 	if commandArr[0] != "200" { // Ansver-code 200(succesfully)
-		logger.Println(str)
+		pterm.Warning.Println(str)
 		return
 	}
 
 	io.Copy(conn, key)
-
-	logger.Println("Key ", key, " Send successfully")
+	pterm.Success.Println("Ключ ", key, " отправлен")
 }

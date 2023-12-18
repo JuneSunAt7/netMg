@@ -40,14 +40,14 @@ func HandleServer(conn net.Conn) {
 		switch strings.ToLower(commandArr[0]) {
 
 		case "download":
-			pterm.BgLightMagenta.Println("Скачивание из облака")
+			pterm.Success.Println("Скачивание из облака")
 			sendFile(conn, commandArr[1])
 
 		case "upload":
-			pterm.BgLightMagenta.Println("Загрузка в облако")
+			pterm.Success.Println("Загрузка в облако")
 			getFile(conn, commandArr[1], commandArr[2])
 		case "ls":
-			pterm.BgLightMagenta.Println("Получение списка файлов")
+			pterm.Success.Println("Получение списка файлов")
 			getListFiles(conn)
 		case "certs":
 			logger.Println("Управление сертификатами")

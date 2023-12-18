@@ -14,7 +14,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/JuneSunAt7/netMg/logger"
 	"github.com/pterm/pterm"
 )
 
@@ -56,7 +55,7 @@ func dataCert(conn net.Conn) {
 
 	defer certOut.Close()
 	pterm.Success.Println(certOut.Name())
-	fmt.Println(certOut.Name())
+
 	conn.Write([]byte("1"))
 
 	// Private key
@@ -64,7 +63,7 @@ func dataCert(conn net.Conn) {
 
 	pem.Encode(keyOut, &pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(priv)})
 	if err != nil {
-		logger.Println("FAILED CREATE CERTIFICATE FOR" + Uname)
+		pterm.Error.Println("FAILED CREATE CERTIFICATE FOR " + Uname)
 	}
 	keyOut.Close()
 }
@@ -74,7 +73,7 @@ func getListCert(conn net.Conn) {
 	files, err := ioutil.ReadDir(CERT + "/" + Uname)
 	if err != nil {
 		conn.Write([]byte(err.Error()))
-		logger.Println(err.Error())
+		pterm.Error.Println(err.Error())
 		return
 	}
 
@@ -94,12 +93,10 @@ func CheckUserCert(uname string) bool {
 
 	if _, err := os.Stat(certUserPath); err != nil {
 		if os.IsNotExist(err) {
-			fmt.Println("f error")
-			fmt.Println(err)
+			pterm.Error.Println(err)
 			return false
 		} else {
-			fmt.Println("sec err")
-			fmt.Println(err)
+			pterm.Error.Println(err)
 			return false
 		}
 	} else {
